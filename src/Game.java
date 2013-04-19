@@ -73,7 +73,7 @@ public class Game {
 	 	    	        //tempValue = cosineInterp(heightMap[i-step][0],n,intermediate);
 	 	    	        //heightMap[b][0] += tempValue;
 	 	    	    	heightMap[k][l] = Math.round(ans);
-	 	    	    	System.out.println(ans);
+	 	    	    	//System.out.println(ans);
 	 	    	    	
     				}
  	    	    }
@@ -81,6 +81,38 @@ public class Game {
                 
     		}
     	}
+    	
+    	/*
+         for (int c = 0; c < 1; c++){
+         step = (int)(1/frequency);
+         int m = randomNums[c];
+         tempValue = m;
+         heightMap[0][0] += tempValue;
+         for (int a = step; a < size; a+= step){
+         int n = randomNums[a];
+         tempValue = n;
+         heightMap[a][0] += tempValue;
+         intermediate = 0.0f;
+         for (int b = (a - step) + 1; b< a; b++){
+         intermediate += (1.0f/(float)(step));
+         //heightMap[b][0] = Noise1D(heightMap[a-step][0],intermediate);
+         tempValue = cosineInterp(heightMap[a-step][0],n,intermediate);
+         heightMap[b][0] += tempValue;
+         }
+         
+         //heightMap[l+2][0] = linearInterp(m,n,l+2);
+         //System.out.println(heightMap[a-step][0]);
+         //System.out.println(heightMap[a-step + 1][0]);
+         //System.out.println(heightMap[a - step +2][0]);
+         //System.out.println(heightMap[a - step + 3][0]);
+         }
+         frequency = frequency * 2;
+         System.out.println(amplitude);
+         amplitude = amplitude / 2;
+         }
+         
+         */
+    	
     	
 	    try {
 		    Display.setDisplayMode(new DisplayMode(800,600));
@@ -106,9 +138,9 @@ public class Game {
 		//Create random cubes
 		myCubes = new ArrayList<Cube>();
         
-	    for (int i = 0; i < 129; i++) {
+	    for (int i = 0; i < size; i++) {
 	    	
-	    	for (int j = 0; j < 129; j++) {
+	    	for (int j = 0; j < size; j++) {
 	    		int randomHeight = 1;;
 	    		for (int k = 0; k < randomHeight;k++) {
                     //	    			Cube c = new Cube(i * 200, (float) Math.sin( (i * 200) / 2000.0f) * 8000, j*200, 200);
