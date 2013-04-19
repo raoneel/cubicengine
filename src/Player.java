@@ -31,34 +31,34 @@ public class Player {
     
     private void processInput() {
         
-
         
-//      while (Keyboard.next()) {
-//  	    if (Keyboard.getEventKeyState()) {
-//  	        if (Keyboard.getEventKey() == Keyboard.KEY_A) {
-//  		    System.out.println("A Key Pressed");
-//  		    cameraX -= 10f;
-//  		}
-//  		if (Keyboard.getEventKey() == Keyboard.KEY_S) {
-//  		    System.out.println("S Key Pressed");
-//  		}
-//  		if (Keyboard.getEventKey() == Keyboard.KEY_D) {
-//  			cameraX += 10f;
-//  		    
-//  		    System.out.println("D Key Pressed");
-//  		}
-//  	    } else {
-//  	        if (Keyboard.getEventKey() == Keyboard.KEY_A) {
-//  		    System.out.println("A Key Released");
-//  	        }
-//  	    	if (Keyboard.getEventKey() == Keyboard.KEY_S) {
-//  		    System.out.println("S Key Released");
-//  		}
-//  		if (Keyboard.getEventKey() == Keyboard.KEY_D) {
-//  		    System.out.println("D Key Released");
-//  		}
-//  	    }
-//  	}
+        
+        //      while (Keyboard.next()) {
+        //  	    if (Keyboard.getEventKeyState()) {
+        //  	        if (Keyboard.getEventKey() == Keyboard.KEY_A) {
+        //  		    System.out.println("A Key Pressed");
+        //  		    cameraX -= 10f;
+        //  		}
+        //  		if (Keyboard.getEventKey() == Keyboard.KEY_S) {
+        //  		    System.out.println("S Key Pressed");
+        //  		}
+        //  		if (Keyboard.getEventKey() == Keyboard.KEY_D) {
+        //  			cameraX += 10f;
+        //
+        //  		    System.out.println("D Key Pressed");
+        //  		}
+        //  	    } else {
+        //  	        if (Keyboard.getEventKey() == Keyboard.KEY_A) {
+        //  		    System.out.println("A Key Released");
+        //  	        }
+        //  	    	if (Keyboard.getEventKey() == Keyboard.KEY_S) {
+        //  		    System.out.println("S Key Released");
+        //  		}
+        //  		if (Keyboard.getEventKey() == Keyboard.KEY_D) {
+        //  		    System.out.println("D Key Released");
+        //  		}
+        //  	    }
+        //  	}
     }
     
     public void translate(float x, float y, float z) {
@@ -73,7 +73,7 @@ public class Player {
         //distance in mouse movement from the last getDY() call.
         int dy = Mouse.getDY();
         
-       
+        
         lookAt.y += dy * mouseSensitivity;
         
         Vector3f view = new Vector3f();
@@ -85,7 +85,7 @@ public class Player {
         
         lookAt.x += right.x * dx * mouseSensitivity;
         lookAt.z += right.z * dx * mouseSensitivity;
-	
+        
         float deltaT = delta / 1000.0f;
         right.scale(movementSpeed * deltaT);
         
@@ -97,8 +97,12 @@ public class Player {
         }
         
         if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-            lookAt.y += 500.0f;
-            camera.y += 500.0f;
+            lookAt.y += 200.0f;
+            camera.y += 200.0f;
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_X)){
+        	lookAt.y -= 200.0f;
+        	camera.y -= 200.0f;
         }
         
         if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
