@@ -31,14 +31,15 @@ public class Game {
 	long lastFPS;
     
     Player player;
-    int size = 129;
-    float frequency = 0.05f;
+    int size = 135;
+    float frequency = 0.1f;
     int step = (int)(1/frequency);
-    int amplitude = 10;
+    int amplitude = 3;
+    int height = 3;
     float heightMap[][] = new float[size][size];
     float tempValue = 0.0f;
     int randomNums[][] = new int[size][size];
-    long seed = 12344L;
+    long seed = 124L;
     Random gen = new Random(seed);
 	
     public void start() {
@@ -46,40 +47,40 @@ public class Game {
     	float intermediateX = 0.0f;
     	float intermediateY = 0.0f;
     	step = (int)(1/frequency);
-    	
-    	for (int i = 0; i < size - step; i += step){
-    		//System.out.println(size);
-    		for (int j = 0; j < size - step; j += step){
-    			int v1 = randomNums[i][j];
-    			int v2 = randomNums[i+step][j];
-    			int v3 = randomNums[i][j+step];
-    			int v4 = randomNums[i+step][j+step];
-    			heightMap[i][j] = Math.round(v1);
-    			heightMap[i+step][j] = Math.round(v2);
-    			heightMap[i][j] = Math.round(v3);
-    			heightMap[i+step][j+step] = Math.round(v4);
-    			intermediateX = 0.0f;
-    			for (int k = i; k< i + step; k++){
-    				intermediateX += (1.0f/(float)(step));
-    				float i1 = cosineInterp(v1,v2,intermediateX);
- 	    	    	float i2 = cosineInterp(v3,v4,intermediateX);
- 	    	    	heightMap[k][j] = Math.round(i1);
- 	    	    	heightMap[k][j+step] = Math.round(i2);
- 	    	    	intermediateY = 0.0f;
-    				for (int l = j + 1; l < j + step; l++){
-	 	    	    	intermediateY += (1.0f/(float)(step));
-	 	    	    	float ans = cosineInterp(i1,i2,intermediateY);
-	 	    	    	//heightMap[b][0] = Noise1D(heightMap[a-step][0],intermediate);
-	 	    	        //tempValue = cosineInterp(heightMap[i-step][0],n,intermediate);
-	 	    	        //heightMap[b][0] += tempValue;
-	 	    	    	heightMap[k][l] = Math.round(ans);
-	 	    	    	//System.out.println(ans);
-	 	    	    	
-    				}
- 	    	    }
-                
-                
-    		}
+	    
+    	for (int c = 0; c < 1; c++){
+	    	for (int i = 0; i < size - step; i += step){
+	    		//System.out.println(size);
+	    		for (int j = 0; j < size - step; j += step){
+	    			int v1 = randomNums[i][j];
+	    			int v2 = randomNums[i+step][j];
+	    			int v3 = randomNums[i][j+step];
+	    			int v4 = randomNums[i+step][j+step];
+	    			heightMap[i][j] = Math.round(v1);
+	    			//heightMap[i+step][j] = Math.round(v2);
+	    			heightMap[i][j+step] = Math.round(v3);
+	    			//heightMap[i+step][j+step] = Math.round(v4);
+	    			intermediateX = 0.0f;
+	    			for (int k = i; k< i + step; k++){
+	    				intermediateX += (1.0f/(float)(step));
+	    				float i1 = cosineInterp(v1,v2,intermediateX);
+	 	    	    	float i2 = cosineInterp(v3,v4,intermediateX);
+	 	    	    	heightMap[k][j] = Math.round(i1);
+	 	    	    	heightMap[k][j+step] = Math.round(i2);
+	 	    	    	intermediateY = 0.0f;
+	    				for (int l = j + 1; l < j + step; l++){
+		 	    	    	intermediateY += (1.0f/(float)(step));
+		 	    	    	float ans = cosineInterp(i1,i2,intermediateY);
+		 	    	    	//heightMap[b][0] = Noise1D(heightMap[a-step][0],intermediate);
+		 	    	        //tempValue = cosineInterp(heightMap[i-step][0],n,intermediate);
+		 	    	        //heightMap[b][0] += tempValue;
+		 	    	    	heightMap[k][l] = Math.round(ans);
+		 	    	    	System.out.println(ans);
+		 	    	    	
+	    				}
+	 	    	    }
+	    		}
+	    	}
     	}
     	
     	/*
@@ -253,7 +254,7 @@ public class Game {
 	public void generateRandom(){
     	for (int i = 0; i < size; i++){
     		for (int j = 0; j < size; j++){
-    			randomNums[i][j] = gen.nextInt(amplitude -1 +1) +1;
+    			randomNums[i][j] = gen.nextInt(height -1 +1) +1;
     		}
     	}
     }
