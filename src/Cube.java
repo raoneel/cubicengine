@@ -16,10 +16,15 @@ public class Cube {
 		pos.z = z;
 		this.width = width;
 		
+		//34-139-34
 		// Give the cube a random color for now
 		this.color.x = (float) Math.random();
 		this.color.y = (float) Math.random();
 		this.color.z = (float) Math.random();
+		
+		this.color.x = 34/255.0f + (float) Math.random() / 10;
+		this.color.y = 139/255.0f + (float) Math.random() / 10;
+		this.color.z = 34/255.0f + (float) Math.random() / 10;
 	}
 	
 	public void draw() {

@@ -13,10 +13,14 @@ public class Player {
 	public Vector3f lookAt;
 	public Vector3f up;
 	
+	
 	public boolean isFly;
 	
     float mouseSensitivity = 2.0f;
     float movementSpeed = 5000.0f; //move 10 units per second
+    
+    private float vx;
+    private float vy;
     
     public Player() {
     	camera = new Vector3f(0, 600, 500);
@@ -55,6 +59,12 @@ public class Player {
 //  		}
 //  	    }
 //  	}
+    }
+    
+    public void translate(float x, float y, float z) {
+    	Vector3f t = new Vector3f(x, y, z);
+    	Vector3f.add(camera, t, camera);
+    	Vector3f.add(lookAt, t, lookAt);
     }
     
     public void update(int delta) {
