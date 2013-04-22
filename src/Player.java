@@ -62,9 +62,7 @@ public class Player {
     }
     
     private void processInput() {
-        
 
-        
       while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
 			    if (Keyboard.getEventKey() == Keyboard.KEY_A) {
@@ -84,7 +82,7 @@ public class Player {
 			    	this.isFly = !isFly;
 			    }
 				if (Keyboard.getEventKey() == Keyboard.KEY_SPACE) {
-					this.translate(0, 400, 0);
+					//this.translate(0, 400, 0);
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_V) {
 					noClip = !noClip;
@@ -92,6 +90,7 @@ public class Player {
 				}
 			}
   		}
+
     }
     
     public void translate(float x, float y, float z) {
@@ -132,10 +131,10 @@ public class Player {
         //distance in mouse movement from the last getDY() call.
         int dy = Mouse.getDY();
         
+
         if (!wasHit) {
         	this.savePosition();
         }
-        
 
         lookAt.y += dy * mouseSensitivity;
         
@@ -148,7 +147,7 @@ public class Player {
         
         lookAt.x += right.x * dx * mouseSensitivity;
         lookAt.z += right.z * dx * mouseSensitivity;
-	
+        
         float deltaT = delta / 1000.0f;
         right.scale(movementSpeed * deltaT);
         
@@ -159,6 +158,14 @@ public class Player {
         	movementSpeed = 5000;
         }
         
+
+        if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+            this.translate(0, 200, 0);
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_X)){
+        	this.translate(0, -200, 0);
+        }
+
         
         if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
         	Vector3f.sub(lookAt, right, lookAt);
