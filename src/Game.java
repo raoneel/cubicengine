@@ -2,6 +2,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -15,10 +16,6 @@ import org.lwjgl.util.vector.Vector3f;
  
 public class Game {
 	
-	Vector3f camera;
-	Vector3f lookAt;
-	Vector3f up;
-
 	ArrayList<Cube> myCubes;
 	
 	/** time at last frame */
@@ -30,6 +27,8 @@ public class Game {
 	long lastFPS;
 
     Player player;
+    World world;
+    
 	
     public void start() {
     	
@@ -43,7 +42,8 @@ public class Game {
 		}
 		
 		player = new Player();
-		player.translate(1000, 0, 1000);
+		player.translate(1000, 6000, 1000);
+		world = new World(50, 20, 50);
 		initGL();
 		
 	    //hide the mouse
@@ -52,31 +52,48 @@ public class Game {
 	    // call once before loop to initialise lastFrame
 	    getDelta(); 
 	    // call before loop to initialise fps timer
-		lastFPS = getTime(); 
+		lastFPS = getTime();
+		
 
 		//Create random cubes
 		myCubes = new ArrayList<Cube>();
+		
+//		world.genShell();
+//		world.genFloor();
+//		world.initCave();
+//		world.genFloor();
+//		world.genCave3D();
+//		world.genCave3D();
+//		world.genCave3D();
+//		world.genCave3D();
+//		world.genFloor();
+		
+//		world.initCave();
+		world.genShell();
+//		world.genFloor();
+//		world.genCeiling();
+//		world.genCave3D();
+//		world.genCave3D();
+//		world.genCave3D();
+//		world.genFloor();
+//		world.genShell();
+		
 
-	    for (int i = 0; i < 100; i++) {
-	    	
-	    	for (int j = 0; j < 100; j++) {
-	    		int randomHeight = 1;;
-	    		for (int k = 0; k < randomHeight;k++) {
-//	    			Cube c = new Cube(i * 200, (float) Math.sin( (i * 200) / 2000.0f) * 8000, j*200, 200);
-	    			Cube c = new Cube(i * 200, j*i, j*200, 200);
-	    	    	myCubes.add(c);
-	    		}
-	    	}
-
-	    }
+		world.make();
+		
+//	    for (int x = 0; x < 100; x++) {
+//	    	for (int z = 0; z < 100; z++) {
+//	    		this.myCubes.add(new Cube(x*200, 0, z*200, 200));
+//	    	}
+//	    }
     
     
 		while (!Display.isCloseRequested()) {
 		    // Clear the screen and depth buffer
-			GL11.glClearColor(0, 191/255.0f, 1, 1);
+//			GL11.glClearColor(0, 191/255.0f, 1, 1);
 		    GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);	
 			
-
+		    
 		    
 		    int delta = getDelta();
 			update(delta);
@@ -91,15 +108,18 @@ public class Game {
     
     public void update(int delta) {
 
-    	player.update(delta);
+    	player.update(delta, world.cubes);
 	    
 	    // Begin drawing 
 	    GL11.glBegin(GL11.GL_QUADS);
 
-	    for (Cube cube : myCubes) {
-	    	cube.draw();
-	    }
+//	    for (Cube cube : myCubes) {
+////	    	cube.draw();
+//	    }
 		
+	    world.drawWorld();
+//	    world.drawFloor();
+	    
 	    GL11.glEnd();
     }
     
@@ -111,7 +131,7 @@ public class Game {
 		GLU.gluPerspective(60.0f, 800f/600f, 1, -1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		
-		float lightAmbient[] = { 1.0f, 0.3f, 0.3f, 1.0f };  // Ambient Light Values
+		float lightAmbient[] = { 0.3f, 0.3f, 0.3f, 1.0f };  // Ambient Light Values
 	    float lightDiffuse[] = { 1.0f, 1.0f, 0.7f, 1.0f };      // Diffuse Light Values
 	    float lightPosition[] = { 100.0f, 300.0f, 20.0f, 0 }; // Light Position
     
@@ -120,13 +140,18 @@ public class Game {
 	    GL11.glLight(GL11.GL_LIGHT1, GL11.GL_AMBIENT, (FloatBuffer)temp.asFloatBuffer().put(lightAmbient).flip());              // Setup The Ambient Light
 	    GL11.glLight(GL11.GL_LIGHT1, GL11.GL_DIFFUSE, (FloatBuffer)temp.asFloatBuffer().put(lightDiffuse).flip());              // Setup The Diffuse Light
 	    GL11.glLight(GL11.GL_LIGHT1, GL11.GL_POSITION,(FloatBuffer)temp.asFloatBuffer().put(lightPosition).flip());         // Position The Light
+	    
+	    
+	    GL11.glLightf(GL11.GL_LIGHT1, GL11.GL_LINEAR_ATTENUATION, 0.3f);
 	    GL11.glEnable(GL11.GL_LIGHT1);                          // Enable Light One
-
-	
+	    
+	    
+	    
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glShadeModel (GL11.GL_FLAT);
 		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+		
     }
     
 	/** 
