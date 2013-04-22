@@ -32,14 +32,15 @@ public class Game {
     
 
     int size = 135;
-    float frequency = 0.1f;
+    float frequency = 0.05f;
     int step = (int)(1/frequency);
     int amplitude = 3;
-    int height = 3;
+    int height = 95;
     float heightMap[][] = new float[size][size];
     float tempValue = 0.0f;
     int randomNums[][] = new int[size][size];
-    long seed = 124L;
+    long seed = 122L;
+    
     Random gen = new Random(seed);
 	
     public void start() {
@@ -127,8 +128,9 @@ public class Game {
 		player = new Player();
 		player.translate(1000, 6000, 1000);
 		//world = new World(50, 20, 50);
-		world = new World(size, size, size);
+		//world = new Chunk(100, 100, 100);
 		initGL();
+		world = new World(player);
 		
 	    //hide the mouse
 	    Mouse.setGrabbed(true);
@@ -151,16 +153,9 @@ public class Game {
 //		world.genCave3D();
 //		world.genCave3D();
 //		world.genFloor();
-		
-//		world.initCave();
+
 //		world.genShell();
-//		world.genFloor();
-//		world.genCeiling();
-//		world.genCave3D();
-//		world.genCave3D();
-//		world.genCave3D();
-//		world.genFloor();
-//		world.genShell();
+		//world.make();
 		
 
 		
@@ -170,29 +165,25 @@ public class Game {
 //	    		this.myCubes.add(new Cube(x*200, 0, z*200, 200));
 //	    	}
 //	    }
-    
-    
-		while (!Display.isCloseRequested()) {
-		    // Clear the screen and depth buffer
-//			GL11.glClearColor(0, 191/255.0f, 1, 1);
-		    GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);	
+	
 			
 		    
         
 		//Create random cubes
-		myCubes = new ArrayList<Cube>();
-        
+        Chunk test = world.drawChunks.get(0);
+		
 	    for (int i = 0; i < size; i++) {
 	    	
 	    	for (int j = 0; j < size; j++) {
 	    		int randomHeight = 1;;
 	    		for (int k = 0; k < randomHeight;k++) {
 
-	    	    	world.setBlock(i, (int) heightMap[i][j], j, 1);
+	    	    	test.setBlock(i, (int) heightMap[i][j], j, 1);
 	    		}
 	    	}
             
 	    }
+//	    world.genCave3D();
 	    world.make();
         
 		while (!Display.isCloseRequested()) {
@@ -211,12 +202,12 @@ public class Game {
         
 		Display.destroy();
     }
-    }
+    
     
     public void update(int delta) {
 
-
-    	player.update(delta, world.cubes);
+    	Chunk test = world.drawChunks.get(0);
+    	player.update(delta, test.cubes);
 
         
 
@@ -225,7 +216,7 @@ public class Game {
 	    GL11.glBegin(GL11.GL_QUADS);
 
 		
-	    world.drawWorld();
+	    world.draw();
 //	    world.drawFloor();
 	    
 	    GL11.glEnd();

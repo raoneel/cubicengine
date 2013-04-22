@@ -9,6 +9,7 @@ public class Cube {
 	public float width;
 	public Vector3f color;
 	public AABB aabb;
+	int xx, yy, zz;
 	
 	public Cube(float x, float y, float z, float width) {
 		this.pos = new Vector3f();
@@ -39,63 +40,86 @@ public class Cube {
 		
 	}
 	
-	public static void drawCube(float x, float y, float z, float width) {
+	/**
+	 * Draws a cube, hides faces which are not seen according to the world array.
+	 * @param x The floating point real coordinate
+	 * @param y Real y coordinate
+	 * @param z Real z coordinate
+	 * @param width Real width of cube
+	 * @param world Array of ints for the world
+	 * @param xx world x coord
+	 * @param yy world y coord
+	 * @param zz world z coord
+	 */
+	public static void drawCube(float x, float y, float z, float width, Chunk world, int xx, int yy, int zz) {
 		// Give the cube a random color for now
 		
 //		GL11.glColor3f((float) Math.random(),(float) Math.random(),(float) Math.random());
 		
 		
-		//front
-		GL11.glNormal3f(0, 0, 1);
-	    GL11.glVertex3f(x, y, z);
-	    GL11.glVertex3f(x + width, y, z);
-	    GL11.glVertex3f(x + width, y - width, z);
-	    GL11.glVertex3f(x, y - width, z);
+		if (world.getBlock(xx, yy, zz - 1) == 0) {
+			//front - Along z axis
+			GL11.glNormal3f(0, 0, 1);
+		    GL11.glVertex3f(x, y, z);
+		    GL11.glVertex3f(x + width, y, z);
+		    GL11.glVertex3f(x + width, y - width, z);
+		    GL11.glVertex3f(x, y - width, z);
+		}
+		
+		if (world.getBlock(xx, yy, zz + 1) == 0) {
+			GL11.glNormal3f(0, 0, -1);
+		    //back
+		    GL11.glVertex3f(x, y, z + width);
+		    GL11.glVertex3f(x + width, y, z + width);
+		    GL11.glVertex3f(x + width, y - width, z + width);
+		    GL11.glVertex3f(x, y - width, z + width);
+		}
+	    
+		if (world.getBlock(xx, yy - 1, zz) == 0) {
+			GL11.glNormal3f(0, -1, 0);
+		    //bottom - Along y axis
+		    GL11.glVertex3f(x, y - width, z);
+		    GL11.glVertex3f(x, y - width, z + width);
+		    GL11.glVertex3f(x + width, y - width, z + width);
+		    GL11.glVertex3f(x + width, y - width, z);
+		}
 
-		GL11.glNormal3f(0, 0, -1);
-	    //back
-	    GL11.glVertex3f(x, y, z + width);
-	    GL11.glVertex3f(x + width, y, z + width);
-	    GL11.glVertex3f(x + width, y - width, z + width);
-	    GL11.glVertex3f(x, y - width, z + width);
+		if (world.getBlock(xx, yy + 1, zz) == 0) {
+		    GL11.glNormal3f(0, 1, 0);
+		    //top
+		    GL11.glVertex3f(x, y, z);
+		    GL11.glVertex3f(x, y, z + width);
+		    GL11.glVertex3f(x + width, y, z + width);
+		    GL11.glVertex3f(x + width, y, z);
+		}
 	    
+	    
+		if (world.getBlock(xx - 1, yy, zz) == 0) {
+		    GL11.glNormal3f(1, 0, 0);
+		    //left - Along x axis
+		    GL11.glVertex3f(x, y, z);
+		    GL11.glVertex3f(x, y, z + width);
+		    GL11.glVertex3f(x, y - width, z + width);
+		    GL11.glVertex3f(x, y - width, z);
+		}
+	    
+		if (world.getBlock(xx + 1, yy, zz) == 0) {
+		    
+		    GL11.glNormal3f(-1, 0, 0);
+		    //right
+		    GL11.glVertex3f(x + width, y, z);
+		    GL11.glVertex3f(x + width, y, z + width);
+		    GL11.glVertex3f(x + width, y - width, z + width);
+		    GL11.glVertex3f(x + width, y - width, z);
+		}
 
-		GL11.glNormal3f(0, -1, 0);
-	    //bottom
-	    GL11.glVertex3f(x, y - width, z);
-	    GL11.glVertex3f(x, y - width, z + width);
-	    GL11.glVertex3f(x + width, y - width, z + width);
-	    GL11.glVertex3f(x + width, y - width, z);
-	    
-	    
-	    GL11.glNormal3f(0, 1, 0);
-	    //top
-	    GL11.glVertex3f(x, y, z);
-	    GL11.glVertex3f(x, y, z + width);
-	    GL11.glVertex3f(x + width, y, z + width);
-	    GL11.glVertex3f(x + width, y, z);
-	    
-
-	    GL11.glNormal3f(1, 0, 0);
-	    //left
-	    GL11.glVertex3f(x, y, z);
-	    GL11.glVertex3f(x, y, z + width);
-	    GL11.glVertex3f(x, y - width, z + width);
-	    GL11.glVertex3f(x, y - width, z);
-	    
-	    GL11.glNormal3f(-1, 0, 0);
-	    //right
-	    GL11.glVertex3f(x + width, y, z);
-	    GL11.glVertex3f(x + width, y, z + width);
-	    GL11.glVertex3f(x + width, y - width, z + width);
-	    GL11.glVertex3f(x + width, y - width, z);
 	}
 	
-	public void draw() {
+	public void draw(Chunk world) {
 	    
 		GL11.glColor3f(color.x,color.y,color.z);
 		GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE);
-		Cube.drawCube(pos.x, pos.y, pos.z, width);
+		Cube.drawCube(pos.x, pos.y, pos.z, width, world, xx, yy, zz);
 
 	}
 

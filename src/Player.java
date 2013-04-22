@@ -216,15 +216,15 @@ public class Player {
         }
         
         //Revert movement to pre update
-        if (!wasHit && isHit) {
-        	this.restorePosition();
-        	wasHit = false;
-        	wasRestored = true;
-        }
-        else {
-        	 wasHit = isHit;
-        	 wasRestored = false;
-        }
+//        if (!wasHit && isHit) {
+//        	this.restorePosition();
+//        	wasHit = false;
+//        	wasRestored = true;
+//        }
+//        else {
+//        	 wasHit = isHit;
+//        	 wasRestored = false;
+//        }
         
        
         
