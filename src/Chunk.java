@@ -16,6 +16,8 @@ public class Chunk {
 	
 	int chunkX;
 	int chunkY;
+	float heightMap[][];
+	Noise noise;
 	
 	public Chunk(int x, int y, int z) {
 		worldArray = new boolean[x][y][z];
@@ -23,23 +25,33 @@ public class Chunk {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		random = new Random();
-	    this.seed = System.currentTimeMillis();
+		//random = new Random(127);
+		//this.heightMap[][];// = new float[255][255];
+	    //this.seed = System.currentTimeMillis();
+		this.seed = 127;
 	}
 	
 	public String getChunkID() {
 		return chunkX + "-" + chunkY;
 	}
 	
-	public void setBlock(int x, int y, int z, boolean type) {
+	public void setBlock(int x, int z, boolean type) {
 		//Use this for testing only, draws columns given a y coordinate
 		for (int i = 0; i < y; i++) {
-			worldArray[x][i][z] = type;
+			worldArray[x][(int)this.heightMap[x][z]][z] = type;
 		}
 		
 		//worldArray[x][y][z] = type;
-	
+        
 	}
+	public void createHeightMap(){
+		//this.heightMap = new float[size][size];
+		this.heightMap = this.noise.interpolate2D();
+	}
+	public void setNoiseParam(int sizeInput, int heightInput, int floorInput, float frequency){
+		this.noise = new Noise(sizeInput, this.seed, heightInput, floorInput, frequency);
+	}
+    
 	
 	public void make() {
 	    for (int i = 0; i < this.x; i++) {
@@ -55,13 +67,13 @@ public class Chunk {
 		    			c.zz = k;
 		    			this.cubes.add(c);
 	    			}
-
-
+                    
+                    
 	    		}
 	    	}
-
+            
 	    }
-
+        
 	}
 	
 	
@@ -70,7 +82,7 @@ public class Chunk {
 			c.draw(this);
 		}
 	}
-
+    
 	
 	/**
 	 * Just like getBlock but returns 0 for blocks that are completely obscured
@@ -101,14 +113,14 @@ public class Chunk {
 		if (z - 1 < 0 || z+1 > this.z -1) {
 			edge = true;
 		}
-
+        
 		//Block is obscured
 		if (!edge && getBlock(x+1, y, z) == 1 &&
-				getBlock(x-1, y, z) == 1 &&
-				getBlock(x, y+1, z) == 1 &&
-				getBlock(x, y-1, z) == 1 &&
-				getBlock(x, y, z+1) == 1 &&
-				getBlock(x, y, z-1) == 1) {
+            getBlock(x-1, y, z) == 1 &&
+            getBlock(x, y+1, z) == 1 &&
+            getBlock(x, y-1, z) == 1 &&
+            getBlock(x, y, z+1) == 1 &&
+            getBlock(x, y, z-1) == 1) {
 			return 0;
 		}
 		
@@ -119,7 +131,7 @@ public class Chunk {
 		else {
 			return 0;
 		}
-	
+        
 	}
 	
 	public int getBlock(int x, int y, int z) {
@@ -138,7 +150,9 @@ public class Chunk {
 		else {
 			return 0;
 		}
-
+        
 	}
-
+    
+	
+    
 }

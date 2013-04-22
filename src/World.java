@@ -9,7 +9,7 @@ public class World {
 	Player player;
 	
 	public World(Player player) {
-		Chunk c = new Chunk(400, 135, 400);
+		Chunk c = new Chunk(400, 255, 400);
 		drawChunks = new ArrayList<Chunk>();
 		drawChunks.add(c);
 	}

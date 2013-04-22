@@ -31,13 +31,12 @@ public class Game {
     World world;
     
     
-    
     int size = 400;
-    
     float frequency = 0.05f;
     int step = (int)(1/frequency);
     int amplitude = 3;
     int height = 20;
+    int floor = 1;
     float heightMap[][] = new float[size][size];
     float tempValue = 0.0f;
     int randomNums[][] = new int[size][size];
@@ -47,45 +46,46 @@ public class Game {
     Random gen = new Random(seed);
 	
     public void start() {
-    	generateRandom();
-    	float intermediateX = 0.0f;
-    	float intermediateY = 0.0f;
-    	step = (int)(1/frequency)-1;
-	    
-    	for (int c = 0; c < 1; c++){
-	    	for (int i = 0; i < size - step; i += step){
-	    		//System.out.println(size);
-	    		for (int j = 0; j < size - step; j += step){
-	    			int v1 = randomNums[i][j];
-	    			int v2 = randomNums[i+step][j];
-	    			int v3 = randomNums[i][j+step];
-	    			int v4 = randomNums[i+step][j+step];
-	    			heightMap[i][j] = Math.round(v1);
-	    			//heightMap[i+step][j] = Math.round(v2);
-	    			heightMap[i][j+step] = Math.round(v3);
-	    			//heightMap[i+step][j+step] = Math.round(v4);
-	    			intermediateX = 0.0f;
-	    			for (int k = i; k<= i + step; k++){
-	    				intermediateX += (1.0f/(float)(step));
-	    				float i1 = cosineInterp(v1,v2,intermediateX);
-	 	    	    	float i2 = cosineInterp(v3,v4,intermediateX);
-	 	    	    	heightMap[k][j] = Math.round(i1);
-	 	    	    	heightMap[k][j+step] = Math.round(i2);
-	 	    	    	intermediateY = 0.0f;
-	    				for (int l = j + 1; l < j + step; l++){
-		 	    	    	intermediateY += (1.0f/(float)(step));
-		 	    	    	float ans = cosineInterp(i1,i2,intermediateY);
-		 	    	    	//heightMap[b][0] = Noise1D(heightMap[a-step][0],intermediate);
-		 	    	        //tempValue = cosineInterp(heightMap[i-step][0],n,intermediate);
-		 	    	        //heightMap[b][0] += tempValue;
-		 	    	    	heightMap[k][l] = Math.round(ans);
-		 	    	    	//System.out.println(ans);
-		 	    	    	
-	    				}
-	 	    	    }
-	    		}
-	    	}
-    	}
+    	/*
+         generateRandom();
+         float intermediateX = 0.0f;
+         float intermediateY = 0.0f;
+         step = (int)(1/frequency)-1;
+         for (int c = 0; c < 1; c++){
+         for (int i = 0; i < size - step; i += step){
+         //System.out.println(size);
+         for (int j = 0; j < size - step; j += step){
+         int v1 = randomNums[i][j];
+         int v2 = randomNums[i+step][j];
+         int v3 = randomNums[i][j+step];
+         int v4 = randomNums[i+step][j+step];
+         heightMap[i][j] = Math.round(v1);
+         //heightMap[i+step][j] = Math.round(v2);
+         heightMap[i][j+step] = Math.round(v3);
+         //heightMap[i+step][j+step] = Math.round(v4);
+         intermediateX = 0.0f;
+         for (int k = i; k<= i + step; k++){
+         intermediateX += (1.0f/(float)(step));
+         float i1 = cosineInterp(v1,v2,intermediateX);
+         float i2 = cosineInterp(v3,v4,intermediateX);
+         heightMap[k][j] = Math.round(i1);
+         heightMap[k][j+step] = Math.round(i2);
+         intermediateY = 0.0f;
+         for (int l = j + 1; l < j + step; l++){
+         intermediateY += (1.0f/(float)(step));
+         float ans = cosineInterp(i1,i2,intermediateY);
+         //heightMap[b][0] = Noise1D(heightMap[a-step][0],intermediate);
+         //tempValue = cosineInterp(heightMap[i-step][0],n,intermediate);
+         //heightMap[b][0] += tempValue;
+         heightMap[k][l] = Math.round(ans);
+         //System.out.println(ans);
+         
+         }
+         }
+         }
+         }
+         }
+         */
     	
     	/*
          for (int c = 0; c < 1; c++){
@@ -174,15 +174,15 @@ public class Game {
         
 		//Create random cubes
         Chunk test = world.drawChunks.get(0);
+        test.setNoiseParam(size,height,floor,frequency);
+        test.createHeightMap();
+        //test.setNoise();
 		
 	    for (int i = 0; i < size; i++) {
-	    	
 	    	for (int j = 0; j < size; j++) {
 	    		int randomHeight = 1;;
 	    		for (int k = 0; k < randomHeight;k++) {
-                    
-	    	    	test.setBlock(i, (int) heightMap[i][j], j, true);
-                    
+	    	    	test.setBlock(i, j, true);
 	    		}
 	    	}
             
