@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 public class Chunk {
 	
-	int[][][] worldArray;
+	boolean[][][] worldArray;
 	ArrayList<Cube> cubes;
 	int x;
 	int y;
@@ -18,7 +18,7 @@ public class Chunk {
 	int chunkY;
 	
 	public Chunk(int x, int y, int z) {
-		worldArray = new int[x][y][z];
+		worldArray = new boolean[x][y][z];
 		cubes = new ArrayList<Cube>();
 		this.x = x;
 		this.y = y;
@@ -31,7 +31,7 @@ public class Chunk {
 		return chunkX + "-" + chunkY;
 	}
 	
-	public void setBlock(int x, int y, int z, int type) {
+	public void setBlock(int x, int y, int z, boolean type) {
 		//Use this for testing only, draws columns given a y coordinate
 		for (int i = 0; i < y; i++) {
 			worldArray[x][i][z] = type;
@@ -101,19 +101,24 @@ public class Chunk {
 		if (z - 1 < 0 || z+1 > this.z -1) {
 			edge = true;
 		}
-		
-		//Block is completely obscured
-		if (!edge && worldArray[x+1][y][z] == 1 &&
-				worldArray[x-1][y][z] == 1 &&
-				worldArray[x][y+1][z] == 1 &&
-				worldArray[x][y-1][z] == 1 &&
-				worldArray[x][y][z+1] == 1 &&
-				worldArray[x][y][z-1] == 1) {
+
+		//Block is obscured
+		if (!edge && getBlock(x+1, y, z) == 1 &&
+				getBlock(x-1, y, z) == 1 &&
+				getBlock(x, y+1, z) == 1 &&
+				getBlock(x, y-1, z) == 1 &&
+				getBlock(x, y, z+1) == 1 &&
+				getBlock(x, y, z-1) == 1) {
 			return 0;
 		}
 		
 		
-		return worldArray[x][y][z];
+		if (worldArray[x][y][z]) {
+			return 1;
+		}
+		else {
+			return 0;
+		}
 	
 	}
 	
@@ -127,8 +132,13 @@ public class Chunk {
 			return 0;
 		}
 		
-		
-		return worldArray[x][y][z];
+		if (worldArray[x][y][z]) {
+			return 1;
+		}
+		else {
+			return 0;
+		}
+
 	}
 
 }

@@ -31,7 +31,7 @@ public class Game {
     World world;
     
 
-    int size = 135;
+    int size = 400;
     float frequency = 0.05f;
     int step = (int)(1/frequency);
     int amplitude = 3;
@@ -178,7 +178,7 @@ public class Game {
 	    		int randomHeight = 1;;
 	    		for (int k = 0; k < randomHeight;k++) {
 
-	    	    	test.setBlock(i, (int) heightMap[i][j], j, 1);
+	    	    	test.setBlock(i, (int) heightMap[i][j], j, true);
 	    		}
 	    	}
             

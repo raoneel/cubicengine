@@ -11,7 +11,7 @@ public class Cave {
 		
 	    for (int x = 0; x < chunk.x; x++) {
 	    	for (int z = 0; z < chunk.z; z++) {
-	    		chunk.setBlock(x, 0, z, 1);
+	    		chunk.setBlock(x, 0, z, true);
 	    	}
 	    }
 	}
@@ -20,13 +20,13 @@ public class Cave {
 		
 	    for (int x = 0; x < chunk.x; x++) {
 	    	for (int z = 0; z < chunk.z; z++) {
-	    		chunk.setBlock(x, chunk.y - 1, z, 1);
+	    		chunk.setBlock(x, chunk.y - 1, z, true);
 	    	}
 	    }
 	}
 	
 	public void genBlock() {
-		chunk.setBlock(0,0,0,1);
+		chunk.setBlock(0,0,0,true);
 	}
 	
 	/**
@@ -40,10 +40,10 @@ public class Cave {
 	    		for (int k = 0; k < chunk.z;k++) {
 
 	    			if (i == 0 || k == 0) {
-	    				chunk.setBlock(i, j, k, 1);
+	    				chunk.setBlock(i, j, k, true);
 	    			}
 	    			if (i == chunk.x - 1 || k == chunk.z - 1 ) {
-	    				chunk.setBlock(i, j, k, 1);
+	    				chunk.setBlock(i, j, k, true);
 	    			}
 	    			
 
@@ -62,7 +62,7 @@ public class Cave {
 	    		for (int k = 0; k < chunk.z;k++) {
 
 	    			if (chunk.random.nextFloat() > 0.5) {
-	    				chunk.setBlock(i, j, k, 1);
+	    				chunk.setBlock(i, j, k, true);
 	    			}
 	    			
 
@@ -73,7 +73,7 @@ public class Cave {
 	}
 	
 	public void genCave3D() {
-		int[][][] newWorld = new int[chunk.x][chunk.y][chunk.z];
+		boolean[][][] newWorld = new boolean[chunk.x][chunk.y][chunk.z];
 	    
 	    for (int i = 1; i < chunk.x - 1; i++) {
 	    	
@@ -116,13 +116,19 @@ public class Cave {
 	    			
 	    			
 	    			if (score < 13) {
-	    				newWorld[i][j][k] = 0;
+	    				newWorld[i][j][k] = false;
 	    			}
 	    			else if (score == 13) {
-	    				newWorld[i][j][k] = chunk.getBlock(i, j, k);
+	    				if (chunk.getBlock(i, j, k) == 1) {
+	    					newWorld[i][j][k] = true;	
+	    				}
+	    				else {
+	    					newWorld[i][j][k] = false;
+	    				}
+	    				
 	    			}
 	    			else if (score > 13) {
-	    				newWorld[i][j][k] = 1;
+	    				newWorld[i][j][k] = true;
 	    			}
 	    			
 
@@ -134,40 +140,40 @@ public class Cave {
 	    chunk.worldArray = newWorld;
 	}
 	
-	public void genCave2D() {
-		int[][][] newWorld = new int[chunk.x][chunk.y][chunk.z];
-	    
-	    for (int i = 1; i < chunk.x - 1; i++) {
-	    	
-	    	for (int j = 1; j < chunk.y - 1; j++) {
-	    		
-	    		for (int k = 0; k < chunk.z;k++) {
-
-	    			int score = chunk.getBlock(i + 1, j + 1, k) +
-	    				chunk.getBlock(i + 1, j, k) +
-	    				chunk.getBlock(i + 1, j - 1, k) +
-	    				chunk.getBlock(i, j + 1, k) + 
-	    				chunk.getBlock(i, j - 1, k) +  
-	    				chunk.getBlock(i - 1, j - 1, k) + 
-	    				chunk.getBlock(i - 1, j, k) + 
-	    				chunk.getBlock(i - 1, j + 1, k);
-	    			
-	    			if (score < 4) {
-	    				newWorld[i][j][k] = 0;
-	    			}
-	    			else if (score == 4) {
-	    				newWorld[i][j][k] = chunk.getBlock(i, j, k);
-	    			}
-	    			else if (score > 4) {
-	    				newWorld[i][j][k] = 1;
-	    			}
-	    			
-
-	    		}
-	    	}
-
-	    }
-	    
-	    chunk.worldArray = newWorld;
-	}
+//	public void genCave2D() {
+//		int[][][] newWorld = new boolean[chunk.x][chunk.y][chunk.z];
+//	    
+//	    for (int i = 1; i < chunk.x - 1; i++) {
+//	    	
+//	    	for (int j = 1; j < chunk.y - 1; j++) {
+//	    		
+//	    		for (int k = 0; k < chunk.z;k++) {
+//
+//	    			int score = chunk.getBlock(i + 1, j + 1, k) +
+//	    				chunk.getBlock(i + 1, j, k) +
+//	    				chunk.getBlock(i + 1, j - 1, k) +
+//	    				chunk.getBlock(i, j + 1, k) + 
+//	    				chunk.getBlock(i, j - 1, k) +  
+//	    				chunk.getBlock(i - 1, j - 1, k) + 
+//	    				chunk.getBlock(i - 1, j, k) + 
+//	    				chunk.getBlock(i - 1, j + 1, k);
+//	    			
+//	    			if (score < 4) {
+//	    				newWorld[i][j][k] = 0;
+//	    			}
+//	    			else if (score == 4) {
+//	    				newWorld[i][j][k] = chunk.getBlock(i, j, k);
+//	    			}
+//	    			else if (score > 4) {
+//	    				newWorld[i][j][k] = 1;
+//	    			}
+//	    			
+//
+//	    		}
+//	    	}
+//
+//	    }
+//	    
+//	    chunk.worldArray = newWorld;
+//	}
 }
