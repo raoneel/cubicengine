@@ -30,10 +30,10 @@ public class Game {
     
     World world;
     
-
-
+    
+    
     int size = 400;
-
+    
     float frequency = 0.05f;
     int step = (int)(1/frequency);
     int amplitude = 3;
@@ -50,7 +50,7 @@ public class Game {
     	generateRandom();
     	float intermediateX = 0.0f;
     	float intermediateY = 0.0f;
-    	step = (int)(1/frequency);
+    	step = (int)(1/frequency)-1;
 	    
     	for (int c = 0; c < 1; c++){
 	    	for (int i = 0; i < size - step; i += step){
@@ -65,7 +65,7 @@ public class Game {
 	    			heightMap[i][j+step] = Math.round(v3);
 	    			//heightMap[i+step][j+step] = Math.round(v4);
 	    			intermediateX = 0.0f;
-	    			for (int k = i; k< i + step; k++){
+	    			for (int k = i; k<= i + step; k++){
 	    				intermediateX += (1.0f/(float)(step));
 	    				float i1 = cosineInterp(v1,v2,intermediateX);
 	 	    	    	float i2 = cosineInterp(v3,v4,intermediateX);
@@ -180,9 +180,9 @@ public class Game {
 	    	for (int j = 0; j < size; j++) {
 	    		int randomHeight = 1;;
 	    		for (int k = 0; k < randomHeight;k++) {
-
+                    
 	    	    	test.setBlock(i, (int) heightMap[i][j], j, true);
-
+                    
 	    		}
 	    	}
             
