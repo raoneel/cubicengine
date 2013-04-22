@@ -9,7 +9,7 @@ public class World {
 	Player player;
 	
 	public World(Player player) {
-		Chunk c = new Chunk(135, 135, 135);
+		Chunk c = new Chunk(300, 125, 300);
 		drawChunks = new ArrayList<Chunk>();
 		drawChunks.add(c);
 	}
@@ -30,5 +30,5 @@ public class World {
 			c.make();
 		}
 	}
-
+    
 }
