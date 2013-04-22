@@ -15,7 +15,7 @@ import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Game {
-
+    
 	ArrayList<Cube> myCubes;
 	
 	/** time at last frame */
@@ -27,19 +27,22 @@ public class Game {
 	long lastFPS;
     
     Player player;
-
+    
     World world;
     
 
+
     int size = 400;
+
     float frequency = 0.05f;
     int step = (int)(1/frequency);
     int amplitude = 3;
-    int height = 95;
+    int height = 20;
     float heightMap[][] = new float[size][size];
     float tempValue = 0.0f;
     int randomNums[][] = new int[size][size];
     long seed = 122L;
+    private int displayList;
     
     Random gen = new Random(seed);
 	
@@ -76,7 +79,7 @@ public class Game {
 		 	    	        //tempValue = cosineInterp(heightMap[i-step][0],n,intermediate);
 		 	    	        //heightMap[b][0] += tempValue;
 		 	    	    	heightMap[k][l] = Math.round(ans);
-		 	    	    	System.out.println(ans);
+		 	    	    	//System.out.println(ans);
 		 	    	    	
 	    				}
 	 	    	    }
@@ -140,34 +143,34 @@ public class Game {
 	    // call before loop to initialise fps timer
 		lastFPS = getTime();
 		
-
+        
 		//Create random cubes
 		myCubes = new ArrayList<Cube>();
 		
-//		world.genShell();
-//		world.genFloor();
-//		world.initCave();
-//		world.genFloor();
-//		world.genCave3D();
-//		world.genCave3D();
-//		world.genCave3D();
-//		world.genCave3D();
-//		world.genFloor();
-
-//		world.genShell();
+        //		world.genShell();
+        //		world.genFloor();
+        //		world.initCave();
+        //		world.genFloor();
+        //		world.genCave3D();
+        //		world.genCave3D();
+        //		world.genCave3D();
+        //		world.genCave3D();
+        //		world.genFloor();
+        
+        //		world.genShell();
 		//world.make();
 		
-
+        
 		
 		
-//	    for (int x = 0; x < 100; x++) {
-//	    	for (int z = 0; z < 100; z++) {
-//	    		this.myCubes.add(new Cube(x*200, 0, z*200, 200));
-//	    	}
-//	    }
-	
-			
-		    
+        //	    for (int x = 0; x < 100; x++) {
+        //	    	for (int z = 0; z < 100; z++) {
+        //	    		this.myCubes.add(new Cube(x*200, 0, z*200, 200));
+        //	    	}
+        //	    }
+        
+        
+        
         
 		//Create random cubes
         Chunk test = world.drawChunks.get(0);
@@ -179,18 +182,30 @@ public class Game {
 	    		for (int k = 0; k < randomHeight;k++) {
 
 	    	    	test.setBlock(i, (int) heightMap[i][j], j, true);
+
 	    		}
 	    	}
             
 	    }
-//	    world.genCave3D();
+        //	    world.genCave3D();
 	    world.make();
+	    displayList = GL11.glGenLists(1);
+	    GL11.glNewList(displayList, GL11.GL_COMPILE);
+	    // Begin drawing
+	    GL11.glBegin(GL11.GL_QUADS);
+        
+		
+	    world.draw();
+        //	    world.drawFloor();
+	    
+	    GL11.glEnd();
+	    GL11.glEndList();
         
 		while (!Display.isCloseRequested()) {
 		    // Clear the screen and depth buffer
 			GL11.glClearColor(0, 191/255.0f, 1, 1);
 		    GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-
+            
 		    
 		    int delta = getDelta();
 			update(delta);
@@ -205,21 +220,14 @@ public class Game {
     
     
     public void update(int delta) {
-
+        
     	Chunk test = world.drawChunks.get(0);
     	player.update(delta, test.cubes);
-
         
-
+        
+        GL11.glCallList(displayList);
 	    
-	    // Begin drawing
-	    GL11.glBegin(GL11.GL_QUADS);
-
-		
-	    world.draw();
-//	    world.drawFloor();
-	    
-	    GL11.glEnd();
+        
     }
     
     public void initGL() {
@@ -243,7 +251,7 @@ public class Game {
 	    
 	    GL11.glLightf(GL11.GL_LIGHT1, GL11.GL_LINEAR_ATTENUATION, 0.3f);
 	    GL11.glEnable(GL11.GL_LIGHT1);                          // Enable Light One
-
+        
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glShadeModel (GL11.GL_FLAT);
