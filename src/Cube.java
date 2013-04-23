@@ -33,7 +33,7 @@ public class Cube {
 	}
 	
 	private void makeAABB() {
-		Vector3f pos = new Vector3f(this.pos.x + width/2.0f, this.pos.y - width/2.0f, this.pos.z + width/2.0f);
+		Vector3f pos = new Vector3f(this.pos.x + width/2.0f, this.pos.y - width/2.0f, this.pos.z + width/2.0f - 200);
 		Vector3f extent = new Vector3f(width / 2.0f, width / 2.0f, width / 2.0f);
 		AABB aabb = new AABB(pos, extent);
 		this.aabb = aabb;

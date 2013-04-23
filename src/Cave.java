@@ -7,6 +7,16 @@ public class Cave {
 		this.chunk = chunk;
 	}
 	
+	public void gen() {
+//		this.initCave();
+		this.genFloor();
+//		this.genShell();
+//		this.genCeiling();
+//		this.genCave3D();
+//		this.genCave3D();
+//		this.genCave3D();
+	}
+	
 	public void genFloor() {
 		
 	    for (int x = 0; x < chunk.x; x++) {
