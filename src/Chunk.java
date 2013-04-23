@@ -42,7 +42,7 @@ public class Chunk {
 			worldArray[x][i][z] = type;
 		}
 		
-		//worldArray[x][y][z] = type;
+		//worldArray[x][(int)this.heightMap[x][z]][z] = type;
         
 	}
 	public void createHeightMap(){

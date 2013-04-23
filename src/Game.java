@@ -31,12 +31,13 @@ public class Game {
     World world;
     
     
-    int size = 400;
-    float frequency = 0.05f;
+    int size = 253;
+    float frequency = 0.06666f;
     int step = (int)(1/frequency);
     int amplitude = 3;
-    int height = 5;
+    int height = 50;
     int floor = 1;
+    //int height = top - floor;
     float heightMap[][] = new float[size][size];
     float tempValue = 0.0f;
     int randomNums[][] = new int[size][size];
