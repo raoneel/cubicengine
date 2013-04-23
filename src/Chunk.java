@@ -37,8 +37,9 @@ public class Chunk {
 	
 	public void setBlock(int x, int z, boolean type) {
 		//Use this for testing only, draws columns given a y coordinate
-		for (int i = 0; i < y; i++) {
-			worldArray[x][(int)this.heightMap[x][z]][z] = type;
+		//System.out.println(this.heightMap[x][z]);
+		for (int i = 0; i < this.heightMap[x][z]; i++) {
+			worldArray[x][i][z] = type;
 		}
 		
 		//worldArray[x][y][z] = type;
@@ -46,7 +47,9 @@ public class Chunk {
 	}
 	public void createHeightMap(){
 		//this.heightMap = new float[size][size];
-		this.heightMap = this.noise.interpolate2D();
+		
+		this.noise.interpolate2D();
+		this.heightMap = this.noise.smoothNoise();
 	}
 	public void setNoiseParam(int sizeInput, int heightInput, int floorInput, float frequency){
 		this.noise = new Noise(sizeInput, this.seed, heightInput, floorInput, frequency);

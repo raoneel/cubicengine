@@ -35,7 +35,7 @@ public class Game {
     float frequency = 0.05f;
     int step = (int)(1/frequency);
     int amplitude = 3;
-    int height = 20;
+    int height = 5;
     int floor = 1;
     float heightMap[][] = new float[size][size];
     float tempValue = 0.0f;
