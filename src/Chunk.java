@@ -51,6 +51,7 @@ public class Chunk {
 //		}
 		
 		worldArray[x][y][z] = type;
+
         
 	}
 

@@ -21,7 +21,6 @@ public class World {
 	public World(Player player) {
 		chunkArray = new Chunk[3][3];
 		this.initChunks(player.camera);
-		
 
 	}
 	

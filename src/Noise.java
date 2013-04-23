@@ -89,22 +89,24 @@ public class Noise {
     	}
     }
 	public float[][] smoothNoise(){
-		for (int i = 1; i < this.size - 1; i++){
-			for (int j = 1; j < this.size - 1; j++){
-				this.smoothMap[i][j] = Math.round((heightMap[i-1][j-1] +
-                                                   heightMap[i+1][j-1] +
-                                                   heightMap[i-1][j+1] +
-                                                   heightMap[i+1][j+1])/16) +
-                Math.round((heightMap[i-1][j] +
-                            heightMap[i+1][j] +
-                            heightMap[i][j-1] +
-                            heightMap[i][j+1])/8) +
+		for (int i = 0; i < this.size; i++){
+			for (int j = 0; j < this.size; j++){
+				
+                
+				this.smoothMap[i][j] = Math.round((heightMap[checkOFB(i-1)][checkOFB(j-1)] +
+                                                   heightMap[checkOFB(i+1)][checkOFB(j-1)] +
+                                                   heightMap[checkOFB(i-1)][checkOFB(j+1)] +
+                                                   heightMap[checkOFB(i+1)][checkOFB(j+1)])/16) +
+                Math.round((heightMap[checkOFB(i-1)][j] +
+                            heightMap[checkOFB(i+1)][j] +
+                            heightMap[i][checkOFB(j-1)] +
+                            heightMap[i][checkOFB(j+1)])/8) +
                 Math.round(heightMap[i][j]/4);
-                //Math.round((heightMap[i+1][j+1])/4.0f);
 			}
 		}
 		return smoothMap;
 	}
+
 	
 	public void createHeightMap(){
 		//this.heightMap = new float[size][size];
@@ -115,5 +117,17 @@ public class Noise {
 	
 	public void setBlocks(Chunk chunk) {
 		//Set the blocks here
+	}
+	
+	public int checkOFB(int i){
+		if ((i) < 0){
+			return i + 1;
+		}else if ((i) > 0 && (i) < this.size){
+			return i;
+		}else if (i >= this.size){
+			return this.size - 1;
+		}
+		return i;
+
 	}
 }
