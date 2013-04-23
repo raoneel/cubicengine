@@ -32,12 +32,12 @@ public class Game {
     
 
 
-    int size = 400;
+    int size = 500;
 
     float frequency = 0.05f;
     int step = (int)(1/frequency);
     int amplitude = 3;
-    int height = 20;
+    int height = 80;
     float heightMap[][] = new float[size][size];
     float tempValue = 0.0f;
     int randomNums[][] = new int[size][size];

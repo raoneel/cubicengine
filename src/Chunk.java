@@ -89,6 +89,10 @@ public class Chunk {
 			return 0;
 		}
 		
+		if (x*y*z == 0) {
+			return 0;
+		}
+		
 		
 		// check if the block is visible
 		boolean edge = false;
