@@ -19,6 +19,8 @@ public class Chunk {
 	float heightMap[][];
 	Noise noise;
 	Cave cave;
+	private int list;
+	private boolean isMade;
 	
 	public Chunk(int x, int y, int z) {
 		worldArray = new boolean[x][y][z];
@@ -30,6 +32,8 @@ public class Chunk {
 		//this.heightMap[][];// = new float[255][255];
 	    //this.seed = System.currentTimeMillis();
 		this.seed = 127;
+		this.list = GL11.glGenLists(1);
+		isMade = false;
 	}
 	
 	public String getChunkID() {
@@ -46,15 +50,13 @@ public class Chunk {
 	public void setBlock(int x, int y, int z, boolean type) {
 		//Use this for testing only, draws columns given a y coordinate
 		//System.out.println(this.heightMap[x][z]);
-//		for (int i = 0; i < this.heightMap[x][z]; i++) {
-//			worldArray[x][i][z] = type;
-//		}
+        //		for (int i = 0; i < this.heightMap[x][z]; i++) {
+        //			worldArray[x][i][z] = type;
+        //		}
 		
 		worldArray[x][y][z] = type;
-
-        
 	}
-
+    
 	public void setNoiseParam(int sizeInput, int heightInput, int floorInput, float frequency){
 		this.noise = new Noise(sizeInput, this.seed, heightInput, floorInput, frequency);
 	}
@@ -99,11 +101,29 @@ public class Chunk {
         
 	}
 	
+	public void makeList(){
+		System.out.println(isMade);
+		if (!isMade){
+            GL11.glNewList(list, GL11.GL_COMPILE);
+            GL11.glBegin(GL11.GL_QUADS);
+            for (Cube c: cubes){
+                c.draw(this);
+            }
+            GL11.glEnd();
+            GL11.glEndList();
+            isMade = true;
+		}
+        
+	}
+	
 	
 	public void draw() {
-		for (Cube c : cubes) {
-			c.draw(this);
-		}
+		/*
+         for (Cube c : cubes) {
+         c.draw(this);
+         }
+         */
+		GL11.glCallList(list);
 	}
     
 	
@@ -124,10 +144,10 @@ public class Chunk {
 			return 0;
 		}
 		
-//		if (x*y*z == 0) {
-//			return 0;
-//		}
-//		
+        //		if (x*y*z == 0) {
+        //			return 0;
+        //		}
+        //
 		
 		// check if the block is visible
 		boolean edge = false;

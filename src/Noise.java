@@ -106,7 +106,7 @@ public class Noise {
 		}
 		return smoothMap;
 	}
-
+    
 	
 	public void createHeightMap(){
 		//this.heightMap = new float[size][size];
@@ -128,6 +128,6 @@ public class Noise {
 			return this.size - 1;
 		}
 		return i;
-
+        
 	}
 }

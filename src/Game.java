@@ -29,7 +29,7 @@ public class Game {
     Player player;
     
     World world;
-
+    
     
     int size = 253;
     float frequency = 0.06666f;
@@ -37,7 +37,7 @@ public class Game {
     int amplitude = 3;
     int height = 50;
     int floor = 1;
-
+    
     float heightMap[][] = new float[size][size];
     float tempValue = 0.0f;
     int randomNums[][] = new int[size][size];
@@ -46,7 +46,7 @@ public class Game {
     
     Random gen = new Random(seed);
 	
-    public void start() {    	
+    public void start() {
     	
 	    try {
 		    Display.setDisplayMode(new DisplayMode(800,600));
@@ -75,28 +75,30 @@ public class Game {
         
 		//Create random cubes
 		myCubes = new ArrayList<Cube>();
-
+        
         
 		//Create random cubes
-//        Chunk test = world.drawChunks.get(0);
-//        test.genTerrain();
-//        test.setNoiseParam(size,height,floor,frequency);
-
+        //        Chunk test = world.drawChunks.get(0);
+        //        test.genTerrain();
+        //        test.setNoiseParam(size,height,floor,frequency);
+        
         //	    world.genCave3D();
 		world.genTerrain();
 	    world.make();
-	    displayList = GL11.glGenLists(1);
-	    GL11.glNewList(displayList, GL11.GL_COMPILE);
-	    // Begin drawing
-	    GL11.glBegin(GL11.GL_QUADS);
-        
-		
-	    world.draw();
-        //	    world.drawFloor();
-	    
-	    GL11.glEnd();
-	    GL11.glEndList();
-        
+	    //world.makeList();
+	    /*
+         displayList = GL11.glGenLists(1);
+         GL11.glNewList(displayList, GL11.GL_COMPILE);
+         // Begin drawing
+         GL11.glBegin(GL11.GL_QUADS);
+         
+         
+         world.draw();
+         //	    world.drawFloor();
+         
+         GL11.glEnd();
+         GL11.glEndList();
+         */
 		while (!Display.isCloseRequested()) {
 		    // Clear the screen and depth buffer
 			GL11.glClearColor(0, 191/255.0f, 1, 1);
@@ -119,9 +121,8 @@ public class Game {
         
     	world.update(player, displayList);
     	player.update(delta, world);
-        
-        
-        GL11.glCallList(displayList);
+    	world.draw();
+        // GL11.glCallList(displayList);
 	    
         
     }
