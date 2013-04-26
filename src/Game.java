@@ -85,6 +85,7 @@ public class Game {
         //	    world.genCave3D();
 		world.genTerrain();
 	    world.make();
+	    world.initDisplay();
 	    //world.makeList();
 	    /*
          displayList = GL11.glGenLists(1);

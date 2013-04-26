@@ -11,16 +11,24 @@ public class World {
 	HashMap<String, Long> chunkSeeds;
 	Player player;
 	Chunk[][] chunkArray;
+	Chunk[][] displayArray;
 	
-	int chunkX = 20;
+	int chunkX = 100;
 	int chunkY = 20;
-	int chunkZ = 20;
-	
+	int chunkZ = 100;
+	int xPos;
+	int yPos;
+	int worldSize = 20;
 	private int list;
 	
 	public World(Player player) {
-		chunkArray = new Chunk[3][3];
+		chunkArray = new Chunk[worldSize][worldSize];
+		displayArray = new Chunk[3][3];
 		this.initChunks(player.camera);
+		xPos = 10;
+		yPos = 10;
+		chunkArray[xPos][yPos].genPlayerPosition(player);
+		
 		//this.list = GL11.glGenLists(1);
         
 	}
@@ -51,25 +59,32 @@ public class World {
 	public void redrawChunks(int cx, int cz) {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
+				
 				if (j==1 & i == 1) {
 					// Don't need to re-generate this since we are already here.
 					continue;
 				}
-				Chunk newChunk = new Chunk(chunkX, chunkY, chunkZ);
-				newChunk.chunkX = cx + i - 1;
-				newChunk.chunkZ = cz + j - 1;
-				chunkArray[i][j] = newChunk;
+				//System.out.println(cx + i - 1);
+				displayArray[i][j] = chunkArray[cx + i - 1][cz + j - 1];
+				//Chunk newChunk = new Chunk(chunkX, chunkY, chunkZ);
+				//newChunk.chunkX = cx + i - 1;
+				//newChunk.chunkZ = cz + j - 1;
+				//chunkArray[i][j] = newChunk;
+				
+				
+				//displayArray[i][j] = chunkArray[i][j];
 				
 			}
 		}
-		this.genTerrain();
-		this.make();
+		//this.draw();
+		//this.genTerrain();
+		//this.make();
 		//this.redrawDisplayList();
 	}
 	
 	public void initChunks(Vector3f playerPosition) {
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
+		for (int i = 0; i < worldSize; i++) {
+			for (int j = 0; j < worldSize; j++) {
 				Chunk newChunk = new Chunk(chunkX, chunkY, chunkZ);
 				newChunk.chunkX = i;
 				newChunk.chunkZ = j;
@@ -82,16 +97,16 @@ public class World {
 	public void update(Player player, int list) {
 		//this.list = list;
 		//Find what chunk the player is in
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
+		for (int i = 0; i < worldSize; i++) {
+			for (int j = 0; j < worldSize; j++) {
 				Chunk aChunk = chunkArray[i][j];
 				if (aChunk.inChunk(player)) {
 					//System.out.println("in chunk: " + i + "- " + j);
-					if (!(i == 1 && j == 1)) {
+					if (!(i == xPos && j == yPos)) {
 						//System.out.println("Not in center");
 						//We left the center chunk here, so we need to redraw everything
 						//First, make the current chunk the center chunk
-						chunkArray[1][1] = aChunk;
+						displayArray[1][1] = aChunk;
 						this.redrawChunks(aChunk.chunkX, aChunk.chunkZ);
 						return;
 					}
@@ -102,8 +117,8 @@ public class World {
 	}
 	
 	public void genTerrain() {
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
+		for (int i = 0; i < worldSize; i++) {
+			for (int j = 0; j < worldSize; j++) {
 				Chunk aChunk = chunkArray[i][j];
 				aChunk.genTerrain();
 			}
@@ -113,18 +128,26 @@ public class World {
 	public void draw() {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
-				Chunk aChunk = chunkArray[i][j];
+				Chunk aChunk = displayArray[i][j];
 				aChunk.draw();
 			}
 		}
 	}
 	
 	public void make() {
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
+		for (int i = 0; i < worldSize; i++) {
+			for (int j = 0; j < worldSize; j++) {
 				Chunk aChunk = chunkArray[i][j];
 				aChunk.make();
 				aChunk.makeList();
+			}
+		}
+	}
+	
+	public void initDisplay(){
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				displayArray[i][j] = chunkArray[xPos+i-1][yPos+j-1];
 			}
 		}
 	}

@@ -20,7 +20,6 @@ public class Chunk {
 	Noise noise;
 	Cave cave;
 	private int list;
-	private boolean isMade;
 	
 	public Chunk(int x, int y, int z) {
 		worldArray = new boolean[x][y][z];
@@ -33,7 +32,7 @@ public class Chunk {
 	    //this.seed = System.currentTimeMillis();
 		this.seed = 127;
 		this.list = GL11.glGenLists(1);
-		isMade = false;
+        
 	}
 	
 	public String getChunkID() {
@@ -102,17 +101,17 @@ public class Chunk {
 	}
 	
 	public void makeList(){
-		System.out.println(isMade);
-		if (!isMade){
-            GL11.glNewList(list, GL11.GL_COMPILE);
-            GL11.glBegin(GL11.GL_QUADS);
-            for (Cube c: cubes){
-                c.draw(this);
-            }
-            GL11.glEnd();
-            GL11.glEndList();
-            isMade = true;
-		}
+		//System.out.println(isMade);
+		//if (!isMade){
+        GL11.glNewList(list, GL11.GL_COMPILE);
+        GL11.glBegin(GL11.GL_QUADS);
+        for (Cube c: cubes){
+            c.draw(this);
+        }
+        GL11.glEnd();
+        GL11.glEndList();
+        //  isMade = true;
+		//}
         
 	}
 	
@@ -198,6 +197,10 @@ public class Chunk {
 			return 0;
 		}
         
+	}
+	
+	public void genPlayerPosition(Player player){
+		player.translate((200 * this.x) * chunkX,0,(200 * this.z) * chunkZ);
 	}
     
 	
