@@ -1,15 +1,20 @@
+import java.util.Random;
+
 
 public class Cave {
 	
 	Chunk chunk;
+	Random random;
 	
 	public Cave(Chunk chunk) {
 		this.chunk = chunk;
+		random = new Random();
 	}
 	
 	public void gen() {
 //		this.initCave();
 		this.genFloor();
+		this.genTrees();
 //		this.genShell();
 //		this.genCeiling();
 //		this.genCave3D();
@@ -22,6 +27,20 @@ public class Cave {
 	    for (int x = 0; x < chunk.x; x++) {
 	    	for (int z = 0; z < chunk.z; z++) {
 	    		chunk.setBlock(x, 0, z, true);
+	    	}
+	    }
+	}
+	
+	public void genTrees() {
+		this.random.setSeed(chunk.seed + 4);
+	    for (int x = 0; x < chunk.x; x++) {
+	    	for (int z = 0; z < chunk.z; z++) {
+	    		int randHeight = 1;
+
+	    		
+	    		for (int y = 0; y < randHeight; y++) {
+	    			chunk.setBlock(x, y, z, true);
+	    		}
 	    	}
 	    }
 	}
@@ -64,14 +83,14 @@ public class Cave {
 	}
 	
 	public void initCave() {
-		chunk.random.setSeed(chunk.seed);
+		this.random.setSeed(chunk.seed);
 	    for (int i = 0; i < chunk.x; i++) {
 	    	
 	    	for (int j = 0; j < chunk.y; j++) {
 	    		
 	    		for (int k = 0; k < chunk.z;k++) {
 
-	    			if (chunk.random.nextFloat() > 0.5) {
+	    			if (this.random.nextFloat() > 0.5) {
 	    				chunk.setBlock(i, j, k, true);
 	    			}
 	    			

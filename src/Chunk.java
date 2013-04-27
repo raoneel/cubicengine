@@ -26,10 +26,10 @@ public class Chunk {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		random = new Random(127);
+		random = new Random();
 		//this.heightMap[][];// = new float[255][255];
-	    //this.seed = System.currentTimeMillis();
-		this.seed = 127;
+	    this.seed = System.currentTimeMillis();
+//		this.seed = 127;
 	}
 	
 	public String getChunkID() {

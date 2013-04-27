@@ -12,16 +12,17 @@ public class World {
 	Player player;
 	Chunk[][] chunkArray;
 	
-	int chunkX = 10;
-	int chunkY = 10;
-	int chunkZ = 10;
+	int chunkX = 70;
+	int chunkY = 50;
+	int chunkZ = 70;
 	
 	private int list;
 	
 	public World(Player player) {
 		chunkArray = new Chunk[3][3];
+		chunkSeeds = new HashMap<String, Long>();
 		this.initChunks(player.camera);
-
+		
 	}
 	
 	public void redrawDisplayList() {
@@ -57,6 +58,14 @@ public class World {
 				Chunk newChunk = new Chunk(chunkX, chunkY, chunkZ);
 				newChunk.chunkX = cx + i - 1;
 				newChunk.chunkZ = cz + j - 1;
+				
+				if (chunkSeeds.containsKey(newChunk.getChunkID())) {
+					newChunk.seed = chunkSeeds.get(newChunk.getChunkID());
+				}
+				else {
+					chunkSeeds.put(newChunk.getChunkID(), newChunk.seed);
+				}
+				
 				chunkArray[i][j] = newChunk;
 				
 			}
@@ -73,6 +82,8 @@ public class World {
 				Chunk newChunk = new Chunk(chunkX, chunkY, chunkZ);
 				newChunk.chunkX = i;
 				newChunk.chunkZ = j;
+				
+				chunkSeeds.put(newChunk.getChunkID(), newChunk.seed);
 				chunkArray[i][j] = newChunk;
 				
 			}
@@ -89,9 +100,9 @@ public class World {
 				
 				
 				if (aChunk.inChunk(player)) {
-					System.out.println("in chunk: " + i + "- " + j);
+//					System.out.println("in chunk: " + i + "- " + j);
 					if (!(i == 1 && j == 1)) {
-						System.out.println("Not in center");
+						System.out.println("Rebuilding chunks...");
 						//We left the center chunk here, so we need to redraw everything
 						//First, make the current chunk the center chunk
 						chunkArray[1][1] = aChunk;
