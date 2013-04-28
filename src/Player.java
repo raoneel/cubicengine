@@ -13,21 +13,23 @@ import org.lwjgl.util.vector.Vector3f;
 public class Player {
 	public Vector3f camera;
 	public Vector3f lookAt;
-
+    
 	public Vector3f oldCamera;
 	public Vector3f oldLookAt;
-
+    
 	public Vector3f up;
 	public AABB aabb;
-
+    
 	public boolean isFly;
 	public boolean wasHit;
 	public boolean wasRestored;
 	public boolean noClip;
 	public boolean onGround;
-
+    
     float mouseSensitivity = 2.0f;
     float movementSpeed = 5000.0f; //move 10 units per second
+    float gravity = 100;
+    float jumpDistance = 2000;
     
     private float vx;
     private float vy;
@@ -36,8 +38,8 @@ public class Player {
     public Vector3f accel;
     
     public Player() {
-    	camera = new Vector3f(0, 600, 500);
-		lookAt = new Vector3f(0, 600, 0);
+    	camera = new Vector3f(0, 0, 0);
+		lookAt = new Vector3f(0, 0, 500);
 		oldCamera = new Vector3f();
 		oldLookAt = new Vector3f();
 		velocity = new Vector3f(0,0,0);
@@ -76,23 +78,23 @@ public class Player {
     }
     
     private void processInput() {
-
-      while (Keyboard.next()) {
+        
+        while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
 			    if (Keyboard.getEventKey() == Keyboard.KEY_A) {
-			//  		    System.out.println("A Key Pressed");
+                    //  		    System.out.println("A Key Pressed");
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_S) {
-			//  		    System.out.println("S Key Pressed");
+                    //  		    System.out.println("S Key Pressed");
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_D) {
-
-			//  		    System.out.println("D Key Pressed");
+                    
+                    //  		    System.out.println("D Key Pressed");
 				}
-			} 
+			}
 			else {
 			    if (Keyboard.getEventKey() == Keyboard.KEY_F) {
-			//  		    System.out.println("A Key Released");
+                    //  		    System.out.println("A Key Released");
 			    	this.isFly = !isFly;
 			    }
 				if (Keyboard.getEventKey() == Keyboard.KEY_SPACE) {
@@ -100,11 +102,11 @@ public class Player {
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_V) {
 					noClip = !noClip;
-
+                    
 				}
 			}
   		}
-
+        
     }
     
     public void translate(float x, float y, float z) {
@@ -131,7 +133,7 @@ public class Player {
     	this.lookAt.x = this.oldLookAt.x;
     	this.lookAt.y = this.oldLookAt.y;
     	this.lookAt.z = this.oldLookAt.z;
-
+        
     }
     
     public void checkIntersection() {
@@ -149,7 +151,7 @@ public class Player {
         if (!wasHit) {
         	this.savePosition();
         }
-
+        
         lookAt.y += dy * mouseSensitivity;
         
         Vector3f view = new Vector3f();
@@ -168,8 +170,8 @@ public class Player {
         if(onGround){
         	velocity.y = 0;
         }
-        if(!onGround && !isFly && velocity.y >= -2000){
-        	Vector3f.add(velocity, new Vector3f(0,-60*deltaT,0), velocity);
+        if(!onGround && !isFly && velocity.y >= -2000){ //gravity
+        	Vector3f.add(velocity, new Vector3f(0,-1*gravity*deltaT,0), velocity);
         }
         
         if(isFly){
@@ -186,24 +188,38 @@ public class Player {
         }
         Vector3f lastSpeed = new Vector3f();
         Vector3f addedSpeed = new Vector3f(0,0,0);
-
+        
         if (isFly  && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
             this.translate(0, 200, 0);
             lastSpeed = null;
         }
         
         if(!isFly && onGround && Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
-        	Vector3f.add(velocity, new Vector3f(0,1500*deltaT,0), velocity);
+        	Vector3f.add(velocity, new Vector3f(0,jumpDistance*deltaT,0), velocity);
         	lastSpeed = null;
         }
-
-        if(!isFly && !onGround){
-        	right.scale(0.1f);
-        	view.scale(0.1f);
+        
+        //if(!isFly && !onGround){
+        	//right.scale(0.1f);
+        	//view.scale(0.1f);
         	
+        //}
+        float scale = 1;
+        if(!onGround && !isFly){
+        	if(velocity.z == 0 && velocity.x == 0){
+        		scale = 0.5f;
+        	}
+        	else{
+        		scale = 0;
+        	}
+        }
+        if(isFly){
+        	scale = 1;
         }
         Vector3f prevVelocity = new Vector3f(velocity.x, velocity.y, velocity.z);
-        if(isFly || onGround){
+        if(scale != 0){
+        	right.scale(scale);
+        	view.scale(scale);
 	        if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
 	        	//Vector3f.sub(lookAt, right, lookAt);
 	        	//Vector3f.sub(camera, right, camera);
@@ -244,16 +260,16 @@ public class Player {
         }
         
         AABB nextaabb = getNextAABB(velocity);
-       boolean isHit = false;
-       Cube hitCube = null;
-       boolean hitGround = false;
+        boolean isHit = false;
+        Cube hitCube = null;
+        boolean hitGround = false;
         if (!noClip) {
         	
         	//TODO Replace with a AABB hierarchy cube test which could be done in the chunk
-
-        	Chunk aChunk = world.chunkArray[1][1];
+            
+        	Chunk aChunk = world.displayArray[1][1];
         	ArrayList<Cube> cubes = aChunk.cubes;
-
+            
         	
         	
             for (Cube c : cubes) {
@@ -276,7 +292,7 @@ public class Player {
         else {
         	isHit = false;
         }
-
+        
         boolean gravity = false;
         Vector3f speedChange = new Vector3f();
         //Stop gravity
@@ -286,53 +302,53 @@ public class Player {
         	velocity = newSpeed;
         }
         /*if (!wasRestored && !isHit && !isFly) {
-        	this.translate(0, -2000*deltaT, 0);
-        	gravity = true;
-        }*/
+         this.translate(0, -2000*deltaT, 0);
+         gravity = true;
+         }*/
         
         //Revert movement to pre update
         /*
-        if (!wasHit && isHit && lastSpeed == null && gravity == true) {
-        	this.restorePosition();
-        	lastSpeed.x = 0;
-        	lastSpeed.y = -2000*deltaT;
-        	lastSpeed.z = 0;
-        	Vector3f newSpeed = this.aabb.gravityFix(hitCube.aabb, -2000*deltaT);
-        	Vector3f.add(lookAt, newSpeed, lookAt);
-        	Vector3f.add(camera, newSpeed, camera);
-        	wasHit = false;
-        	wasRestored = true;
-        	lastSpeed = null;
-        	
-        }*/
+         if (!wasHit && isHit && lastSpeed == null && gravity == true) {
+         this.restorePosition();
+         lastSpeed.x = 0;
+         lastSpeed.y = -2000*deltaT;
+         lastSpeed.z = 0;
+         Vector3f newSpeed = this.aabb.gravityFix(hitCube.aabb, -2000*deltaT);
+         Vector3f.add(lookAt, newSpeed, lookAt);
+         Vector3f.add(camera, newSpeed, camera);
+         wasHit = false;
+         wasRestored = true;
+         lastSpeed = null;
+         
+         }*/
         /*
-        if(isHit && lastSpeed != null){
-        	this.restorePosition();
-        	Vector3f newSpeed =  this.aabb.lastAxis(hitCube.aabb, lastSpeed);
-        	Vector3f.add(lookAt, newSpeed, lookAt);
-        	Vector3f.add(camera, newSpeed, camera);
-        	
-        }*/
+         if(isHit && lastSpeed != null){
+         this.restorePosition();
+         Vector3f newSpeed =  this.aabb.lastAxis(hitCube.aabb, lastSpeed);
+         Vector3f.add(lookAt, newSpeed, lookAt);
+         Vector3f.add(camera, newSpeed, camera);
+         
+         }*/
         /*
-        else {
-        	 wasHit = isHit;
-        	 wasRestored = false;
-        }*/
-       if(onGround){
-    	   velocity.y = 0;
-       }
-       Vector3f.add(lookAt, velocity, lookAt);
-       Vector3f.add(camera, velocity, camera);
-       //if(speedChange.z == 0){
+         else {
+         wasHit = isHit;
+         wasRestored = false;
+         }*/
+        if(onGround){
+            velocity.y = 0;
+        }
+        Vector3f.add(lookAt, velocity, lookAt);
+        Vector3f.add(camera, velocity, camera);
+        //if(speedChange.z == 0){
     	//   Vector3f.sub(addedSpeed,speedChange, addedSpeed);
-      // }
-       if(onGround){
-    	   velocity.x = 0;
-    	   velocity.z = 0;
-       }
-       //Vector3f.sub(velocity, addedSpeed, velocity);
-      //  velocity.x = 0;
-       // velocity.z = 0;
+        // }
+        if(onGround){
+            velocity.x = 0;
+            velocity.z = 0;
+        }
+        //Vector3f.sub(velocity, addedSpeed, velocity);
+        //  velocity.x = 0;
+        // velocity.z = 0;
         GL11.glLoadIdentity();
     	GLU.gluLookAt(camera.x, camera.y, camera.z, lookAt.x, lookAt.y, lookAt.z, up.x, up.y, up.z);
     	

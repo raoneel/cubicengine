@@ -29,7 +29,7 @@ public class Game {
     Player player;
     
     World world;
-
+    
     
     int size = 253;
     float frequency = 0.06666f;
@@ -37,7 +37,7 @@ public class Game {
     int amplitude = 3;
     int height = 50;
     int floor = 1;
-
+    
     float heightMap[][] = new float[size][size];
     float tempValue = 0.0f;
     int randomNums[][] = new int[size][size];
@@ -46,7 +46,7 @@ public class Game {
     
     Random gen = new Random(seed);
 	
-    public void start() {    	
+    public void start() {
     	
 	    try {
 		    Display.setDisplayMode(new DisplayMode(800,600));
@@ -71,32 +71,12 @@ public class Game {
 	    getDelta();
 	    // call before loop to initialise fps timer
 		lastFPS = getTime();
-		
-        
-		//Create random cubes
-		myCubes = new ArrayList<Cube>();
 
-        
-		//Create random cubes
-//        Chunk test = world.drawChunks.get(0);
-//        test.genTerrain();
-//        test.setNoiseParam(size,height,floor,frequency);
 
-        //	    world.genCave3D();
 		world.genTerrain();
 	    world.make();
-	    displayList = GL11.glGenLists(1);
-	    GL11.glNewList(displayList, GL11.GL_COMPILE);
-	    // Begin drawing
-	    GL11.glBegin(GL11.GL_QUADS);
-        
-		
-	    world.draw();
-        //	    world.drawFloor();
-	    
-	    GL11.glEnd();
-	    GL11.glEndList();
-        
+	    world.initDisplay();
+
 		while (!Display.isCloseRequested()) {
 		    // Clear the screen and depth buffer
 			GL11.glClearColor(0, 191/255.0f, 1, 1);
@@ -119,9 +99,8 @@ public class Game {
         
     	world.update(player, displayList);
     	player.update(delta, world);
-        
-        
-        GL11.glCallList(displayList);
+    	world.draw();
+        // GL11.glCallList(displayList);
 	    
         
     }
@@ -188,22 +167,6 @@ public class Game {
 			lastFPS += 1000;
 		}
 		fps++;
-	}
-    
-	public float cosineInterp(float a, float b, float x){
-    	float ft = x * 3.1415927f;
-    	float f = (float) (1f - Math.cos(ft)) * .5f;
-    	return a*(1-f) + b*f;
-    }
-	public void generateRandom(){
-    	for (int i = 0; i < size; i++){
-    		for (int j = 0; j < size; j++){
-    			randomNums[i][j] = gen.nextInt(height -1 +1) +1;
-    		}
-    	}
-    }
-	public float interpolate(float a, float step, float intermediate){
-		return 0.0f;
 	}
 	
     public static void main(String[] argv) {

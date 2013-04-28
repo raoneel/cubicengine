@@ -106,17 +106,33 @@ public class Noise {
 		}
 		return smoothMap;
 	}
-
+    
 	
 	public void createHeightMap(){
 		//this.heightMap = new float[size][size];
 		
 		this.interpolate2D();
 		this.heightMap = this.smoothNoise();
+		
 	}
 	
 	public void setBlocks(Chunk chunk) {
-		//Set the blocks here
+		for (int x = 0; x < size; x++) {
+			for (int z = 0; z < size; z++) {
+				int height = (int)heightMap[x][z];
+				for (int y = 0; y < height; y++) {
+					if (y > this.height - 5) {
+						chunk.setBlock(x, y, z, CubeType.SNOW);
+					}
+					else {
+						chunk.setBlock(x, y, z, 1);
+					}
+					
+					
+				}
+				
+			}
+		}
 	}
 	
 	public int checkOFB(int i){
@@ -128,6 +144,6 @@ public class Noise {
 			return this.size - 1;
 		}
 		return i;
-
+        
 	}
 }

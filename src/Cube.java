@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
@@ -10,14 +11,17 @@ public class Cube {
 	public Vector3f color;
 	public AABB aabb;
 	int xx, yy, zz;
+	public Random random;
+	public int type = 0;
 	
-	public Cube(float x, float y, float z, float width) {
+	public Cube(float x, float y, float z, float width, int type) {
 		this.pos = new Vector3f();
 		this.color = new Vector3f();
 		pos.x = x;
 		pos.y = y;
 		pos.z = z;
 		this.width = width;
+
 		
 		//34-139-34 grass
 		//139-69-19 dirt
@@ -26,11 +30,27 @@ public class Cube {
 //		this.color.y = (float) Math.random();
 //		this.color.z = (float) Math.random();
 		
-		this.color.x = 34/255.0f + (float) Math.random() / 10;
-		this.color.y = 139/255.0f + (float) Math.random() / 10;
-		this.color.z = 34/255.0f + (float) Math.random() / 10;
+		if (type == 0 || type == 1) {
+			this.color.x = CubeColor.GRASS.x + (float) Math.random() / 10;
+			this.color.y = CubeColor.GRASS.y + (float) Math.random() / 10;
+			this.color.z = CubeColor.GRASS.z + (float) Math.random() / 10;
+		}
+		else if (type == CubeType.DIRT) {
+			this.setColor(CubeColor.DIRT);
+		}
+		else if (type == CubeType.SNOW) {
+			this.setColor(CubeColor.SNOW);
+		}
+
 		makeAABB();
 	}
+	
+	public void setColor(Vector3f newColor) {
+		this.color.x = newColor.x + (float) Math.random() / 10;
+		this.color.y = newColor.y + (float) Math.random() / 10;
+		this.color.z = newColor.z + (float) Math.random() / 10;
+	}
+	
 	
 	private void makeAABB() {
 		Vector3f pos = new Vector3f(this.pos.x + width/2.0f, this.pos.y - width/2.0f, this.pos.z + width/2.0f - 200);

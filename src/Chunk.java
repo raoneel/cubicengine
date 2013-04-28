@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 public class Chunk {
 	
-	boolean[][][] worldArray;
+	int[][][] worldArray;
 	ArrayList<Cube> cubes;
 	int x;
 	int y;
@@ -19,17 +19,23 @@ public class Chunk {
 	float heightMap[][];
 	Noise noise;
 	Cave cave;
+	Forest forest;
+	private int list;
 	
 	public Chunk(int x, int y, int z) {
-		worldArray = new boolean[x][y][z];
+		worldArray = new int[x][y][z];
 		cubes = new ArrayList<Cube>();
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		random = new Random();
 		//this.heightMap[][];// = new float[255][255];
+//	    this.seed = System.currentTimeMillis();
+//		this.seed = 127;
 	    this.seed = System.currentTimeMillis();
 //		this.seed = 127;
+		this.list = GL11.glGenLists(1);
+        
 	}
 	
 	public String getChunkID() {
@@ -40,21 +46,45 @@ public class Chunk {
 		// Put all of the custom terrain functions in here
 		
 		cave = new Cave(this);
-		cave.gen();
+		forest = new Forest(this, 0.02f);
+		cave.gen(0,10);
+		forest.genTrees();
+		this.setNoiseParam(x, y, 10, 0.05f);
+		this.noise.createHeightMap();
+		this.noise.setBlocks(this);
+		
 	}
 	
-	public void setBlock(int x, int y, int z, boolean type) {
+	public int topBlock(int x, int z) {
+		for (int y = this.y; y > 0; y--) {
+			if (this.getBlock(x, y, z) == 1) {
+				return y;
+			}
+		}
+		
+		return 0;
+	}
+	
+	public void setBlock(int x, int y, int z, int type) {
 		//Use this for testing only, draws columns given a y coordinate
 		//System.out.println(this.heightMap[x][z]);
-//		for (int i = 0; i < this.heightMap[x][z]; i++) {
-//			worldArray[x][i][z] = type;
-//		}
+        //		for (int i = 0; i < this.heightMap[x][z]; i++) {
+        //			worldArray[x][i][z] = type;
+        //		}
+		
+		if (x < 0 || y < 0 || z < 0) {
+			return;
+		}
+		
+		if (x >= this.x || y >= this.y || z >= this.z) {
+			return;
+		}
+		
+		
 		
 		worldArray[x][y][z] = type;
-
-        
 	}
-
+    
 	public void setNoiseParam(int sizeInput, int heightInput, int floorInput, float frequency){
 		this.noise = new Noise(sizeInput, this.seed, heightInput, floorInput, frequency);
 	}
@@ -82,12 +112,14 @@ public class Chunk {
 	    		
 	    		for (int k = 0; k < this.z;k++) {
 	    			
-	    			if (this.drawGetBlock(i, j, k) == 1) {
+	    			if (this.drawGetBlock(i, j, k) > 0) {
 	    				//Offset the cubes by the chunk offset
-		    			Cube c = new Cube(i * 200 + (200 * this.x) * chunkX, j * 200, k * 200 + (200 * this.z) * chunkZ, 200);
+		    			Cube c = new Cube(i * 200 + (200 * this.x) * chunkX, j * 200, k * 200 + (200 * this.z) * chunkZ, 200,this.getBlock(i, j, k) );
 		    			c.xx = i;
 		    			c.yy = j;
 		    			c.zz = k;
+
+		    			
 		    			this.cubes.add(c);
 	    			}
                     
@@ -99,11 +131,29 @@ public class Chunk {
         
 	}
 	
+	public void makeList(){
+		//System.out.println(isMade);
+		//if (!isMade){
+        GL11.glNewList(list, GL11.GL_COMPILE);
+        GL11.glBegin(GL11.GL_QUADS);
+        for (Cube c: cubes){
+            c.draw(this);
+        }
+        GL11.glEnd();
+        GL11.glEndList();
+        //  isMade = true;
+		//}
+        
+	}
+	
 	
 	public void draw() {
-		for (Cube c : cubes) {
-			c.draw(this);
-		}
+		/*
+         for (Cube c : cubes) {
+         c.draw(this);
+         }
+         */
+		GL11.glCallList(list);
 	}
     
 	
@@ -124,10 +174,10 @@ public class Chunk {
 			return 0;
 		}
 		
-//		if (x*y*z == 0) {
-//			return 0;
-//		}
-//		
+        //		if (x*y*z == 0) {
+        //			return 0;
+        //		}
+        //
 		
 		// check if the block is visible
 		boolean edge = false;
@@ -152,12 +202,8 @@ public class Chunk {
 		}
 		
 		
-		if (worldArray[x][y][z]) {
-			return 1;
-		}
-		else {
-			return 0;
-		}
+		return worldArray[x][y][z];
+
         
 	}
 	
@@ -171,13 +217,12 @@ public class Chunk {
 			return 0;
 		}
 		
-		if (worldArray[x][y][z]) {
-			return 1;
-		}
-		else {
-			return 0;
-		}
+		return worldArray[x][y][z];
         
+	}
+	
+	public void genPlayerPosition(Player player){
+		player.translate((200 * this.x) * chunkX,0,(200 * this.z) * chunkZ);
 	}
     
 	
