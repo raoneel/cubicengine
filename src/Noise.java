@@ -122,7 +122,7 @@ public class Noise {
 				int height = (int)heightMap[x][z];
 				for (int y = 0; y < height; y++) {
 					if (y > this.height - 5) {
-						chunk.setBlock(x, y, z, CubeType.SNOW);
+						chunk.setBlock(x, y, z, CubeType.GRASS);
 					}
 					else {
 						chunk.setBlock(x, y, z, 1);

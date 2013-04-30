@@ -6,5 +6,6 @@ public class CubeType {
 	public static int WOOD = 3;
 	public static int SNOW = 4;
 	public static int WATER = 5;
+	public static int LEAVES = 6;
 
 }

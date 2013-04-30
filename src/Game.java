@@ -72,10 +72,7 @@ public class Game {
 	    // call before loop to initialise fps timer
 		lastFPS = getTime();
 
-
-		world.genTerrain();
 	    world.make();
-	    world.initDisplay();
 
 		while (!Display.isCloseRequested()) {
 		    // Clear the screen and depth buffer
@@ -100,8 +97,6 @@ public class Game {
     	world.update(player, displayList);
     	player.update(delta, world);
     	world.draw();
-        // GL11.glCallList(displayList);
-	    
         
     }
     

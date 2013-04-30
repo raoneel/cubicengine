@@ -20,20 +20,20 @@ public class Chunk {
 	Noise noise;
 	Cave cave;
 	Forest forest;
+	Water water;
 	private int list;
+	World world;
 	
-	public Chunk(int x, int y, int z) {
+	public Chunk(int x, int y, int z, World world) {
+		this.world = world;
 		worldArray = new int[x][y][z];
 		cubes = new ArrayList<Cube>();
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		random = new Random();
-		//this.heightMap[][];// = new float[255][255];
-//	    this.seed = System.currentTimeMillis();
-//		this.seed = 127;
+
 	    this.seed = System.currentTimeMillis();
-//		this.seed = 127;
 		this.list = GL11.glGenLists(1);
         
 	}
@@ -42,16 +42,22 @@ public class Chunk {
 		return chunkX + "-" + chunkZ;
 	}
 	
+	public void genSeed() {
+		this.seed = (world.seed + " " + this.getChunkID()).hashCode();
+	}
+	
 	public void genTerrain() {
 		// Put all of the custom terrain functions in here
-		
+		random.setSeed(seed);
 		cave = new Cave(this);
-		forest = new Forest(this, 0.02f);
+		forest = new Forest(this, 0.167f);
 		cave.gen(0,10);
-		forest.genTrees();
-		this.setNoiseParam(x, y, 10, 0.05f);
+//		forest.genTrees();
+		this.setNoiseParam(x, y, 10, 0.25f);
 		this.noise.createHeightMap();
 		this.noise.setBlocks(this);
+//		this.water = new Water(this, 0.05f);
+//		this.water.genWater();
 		
 	}
 	
@@ -106,6 +112,7 @@ public class Chunk {
     
 	
 	public void make() {
+		this.genTerrain();
 	    for (int i = 0; i < this.x; i++) {
 	    	
 	    	for (int j = 0; j < this.y; j++) {
@@ -210,11 +217,11 @@ public class Chunk {
 	public int getBlock(int x, int y, int z) {
 		//Return 0 for out of bounds
 		if (x < 0 || y < 0 || z < 0) {
-			return 0;
+			return -1;
 		}
 		
 		if (x >= this.x || y >= this.y || z >= this.z) {
-			return 0;
+			return -1;
 		}
 		
 		return worldArray[x][y][z];
@@ -222,7 +229,7 @@ public class Chunk {
 	}
 	
 	public void genPlayerPosition(Player player){
-		player.translate((200 * this.x) * chunkX,0,(200 * this.z) * chunkZ);
+		player.translate((200 * this.x) * chunkX,(200 * this.y),(200 * this.z) * chunkZ);
 	}
     
 	

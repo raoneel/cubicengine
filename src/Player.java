@@ -267,7 +267,7 @@ public class Player {
         	
         	//TODO Replace with a AABB hierarchy cube test which could be done in the chunk
             
-        	Chunk aChunk = world.displayArray[1][1];
+        	Chunk aChunk = world.chunkArray[world.xPosCenter][world.yPosCenter];
         	ArrayList<Cube> cubes = aChunk.cubes;
             
         	

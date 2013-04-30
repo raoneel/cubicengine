@@ -29,19 +29,19 @@ public class Forest {
 	    			chunk.setBlock(x, y, z, CubeType.DIRT);
 	    			
 	    			if (y == randHeight - 1) {
-	    				chunk.setBlock(x,y,z,CubeType.GRASS);
+	    				chunk.setBlock(x,y,z,CubeType.LEAVES);
 	    				
-	    				chunk.setBlock(x,y - 1,z,CubeType.GRASS);
-	    				chunk.setBlock(x+1,y - 1,z,CubeType.GRASS);
-	    				chunk.setBlock(x-1,y - 1,z,CubeType.GRASS);
-	    				chunk.setBlock(x,y - 1,z-1,CubeType.GRASS);
-	    				chunk.setBlock(x,y - 1,z+1,CubeType.GRASS);
+	    				chunk.setBlock(x,y - 1,z,CubeType.LEAVES);
+	    				chunk.setBlock(x+1,y - 1,z,CubeType.LEAVES);
+	    				chunk.setBlock(x-1,y - 1,z,CubeType.LEAVES);
+	    				chunk.setBlock(x,y - 1,z-1,CubeType.LEAVES);
+	    				chunk.setBlock(x,y - 1,z+1,CubeType.LEAVES);
 	    				
-	    				chunk.setBlock(x,y - 2,z,CubeType.GRASS);
-	    				chunk.setBlock(x+1,y - 2,z,CubeType.GRASS);
-	    				chunk.setBlock(x-1,y - 2,z,CubeType.GRASS);
-	    				chunk.setBlock(x,y - 2,z-1,CubeType.GRASS);
-	    				chunk.setBlock(x,y - 2,z+1,CubeType.GRASS);
+	    				chunk.setBlock(x,y - 2,z,CubeType.LEAVES);
+	    				chunk.setBlock(x+1,y - 2,z,CubeType.LEAVES);
+	    				chunk.setBlock(x-1,y - 2,z,CubeType.LEAVES);
+	    				chunk.setBlock(x,y - 2,z-1,CubeType.LEAVES);
+	    				chunk.setBlock(x,y - 2,z+1,CubeType.LEAVES);
 
 	    			}
 	    		}

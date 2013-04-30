@@ -21,6 +21,7 @@ public class Cube {
 		pos.y = y;
 		pos.z = z;
 		this.width = width;
+		this.type = type;
 
 		
 		//34-139-34 grass
@@ -30,6 +31,12 @@ public class Cube {
 //		this.color.y = (float) Math.random();
 //		this.color.z = (float) Math.random();
 		
+
+		this.refreshColor();
+		makeAABB();
+	}
+	
+	public void refreshColor() {
 		if (type == 0 || type == 1) {
 			this.color.x = CubeColor.GRASS.x + (float) Math.random() / 10;
 			this.color.y = CubeColor.GRASS.y + (float) Math.random() / 10;
@@ -41,8 +48,12 @@ public class Cube {
 		else if (type == CubeType.SNOW) {
 			this.setColor(CubeColor.SNOW);
 		}
-
-		makeAABB();
+		else if (type == CubeType.LEAVES) {
+			this.setColor(CubeColor.LEAVES);
+		}
+		else if (type == CubeType.WATER) {
+			this.setColor(CubeColor.WATER);
+		}
 	}
 	
 	public void setColor(Vector3f newColor) {
@@ -76,8 +87,10 @@ public class Cube {
 		
 //		GL11.glColor3f((float) Math.random(),(float) Math.random(),(float) Math.random());
 		
+
 		
-		if (world.getBlock(xx, yy, zz - 1) == 0) {
+		
+		if (world.getBlock(xx, yy, zz - 1) < 1) {
 			//front - Along z axis
 			GL11.glNormal3f(0, 0, 1);
 		    GL11.glVertex3f(x, y, z);
@@ -86,7 +99,7 @@ public class Cube {
 		    GL11.glVertex3f(x, y - width, z);
 		}
 		
-		if (world.getBlock(xx, yy, zz + 1) == 0) {
+		if (world.getBlock(xx, yy, zz + 1) < 1) {
 			GL11.glNormal3f(0, 0, -1);
 		    //back
 		    GL11.glVertex3f(x, y, z + width);
@@ -95,7 +108,7 @@ public class Cube {
 		    GL11.glVertex3f(x, y - width, z + width);
 		}
 	    
-		if (world.getBlock(xx, yy - 1, zz) == 0) {
+		if (world.getBlock(xx, yy - 1, zz) < 1) {
 			GL11.glNormal3f(0, -1, 0);
 		    //bottom - Along y axis
 		    GL11.glVertex3f(x, y - width, z);
@@ -104,7 +117,7 @@ public class Cube {
 		    GL11.glVertex3f(x + width, y - width, z);
 		}
 
-		if (world.getBlock(xx, yy + 1, zz) == 0) {
+		if (world.getBlock(xx, yy + 1, zz)< 1) {
 		    GL11.glNormal3f(0, 1, 0);
 		    //top
 		    GL11.glVertex3f(x, y, z);
@@ -114,31 +127,36 @@ public class Cube {
 		}
 	    
 	    
-		if (world.getBlock(xx - 1, yy, zz) == 0) {
-		    GL11.glNormal3f(1, 0, 0);
-		    //left - Along x axis
-		    GL11.glVertex3f(x, y, z);
-		    GL11.glVertex3f(x, y, z + width);
-		    GL11.glVertex3f(x, y - width, z + width);
-		    GL11.glVertex3f(x, y - width, z);
-		}
-	    
-		if (world.getBlock(xx + 1, yy, zz) == 0) {
-		    
-		    GL11.glNormal3f(-1, 0, 0);
-		    //right
-		    GL11.glVertex3f(x + width, y, z);
-		    GL11.glVertex3f(x + width, y, z + width);
-		    GL11.glVertex3f(x + width, y - width, z + width);
-		    GL11.glVertex3f(x + width, y - width, z);
-		}
+//		if (world.getBlock(xx - 1, yy, zz) < 1) {
+//		    GL11.glNormal3f(1, 0, 0);
+//		    //left - Along x axis
+//		    GL11.glVertex3f(x, y, z);
+//		    GL11.glVertex3f(x, y, z + width);
+//		    GL11.glVertex3f(x, y - width, z + width);
+//		    GL11.glVertex3f(x, y - width, z);
+//		}
+//	    
+//		if (world.getBlock(xx + 1, yy, zz) < 1) {
+//		    
+//		    GL11.glNormal3f(-1, 0, 0);
+//		    //right
+//		    GL11.glVertex3f(x + width, y, z);
+//		    GL11.glVertex3f(x + width, y, z + width);
+//		    GL11.glVertex3f(x + width, y - width, z + width);
+//		    GL11.glVertex3f(x + width, y - width, z);
+//		}
 
 	}
 	
 	public void draw(Chunk world) {
-	    
-		GL11.glColor3f(color.x,color.y,color.z);
-		GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE);
+		
+		if (this.type == CubeType.WATER) {
+			this.refreshColor();
+		}
+		GL11.glColor4f(color.x,color.y,color.z, 0.5f);
+		GL11.glColorMaterial(GL11.GL_FRONT_AND_BACK, GL11.GL_DIFFUSE);
+		
+		
 		Cube.drawCube(pos.x, pos.y, pos.z, width, world, xx, yy, zz);
 
 	}

@@ -18,15 +18,15 @@ public class Cave {
 		this.bottomCave = bottom;
 		this.topCave = top;
 		
-		this.initCave();
+//		this.initCave();
 		this.genFloor();
 //		this.genTrees();
-		this.genShell();
-		this.genCeiling();
-		this.genCave3D();
-		this.genCave3D();
+//		this.genShell();
+//		this.genCeiling();
 //		this.genCave3D();
-		this.genFloor();
+//		this.genCave3D();
+//		this.genCave3D();
+//		this.genFloor();
 	}
 	
 	public void genFloor() {
