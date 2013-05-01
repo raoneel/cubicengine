@@ -36,9 +36,8 @@ public class Chunk {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		world.seed = 1234l;
 		//this.genSeed();
-		//random = new Random();
+		random = new Random();
 		this.worldStep = world.stepSize;
 		//worldStepX = chunkX;
 		//worldStepY = chunkZ;
@@ -75,7 +74,7 @@ public class Chunk {
 		this.noise.createHeightMap();
 		this.noise.setBlocks(this);
 		this.water = new Water(this, 0.05f);
-		this.water.genWater();
+		this.water.genFloorWater();
 
 	
 

@@ -14,7 +14,7 @@ public class World {
 	Chunk[][] tempArray;
     
 	int chunkX = 16;
-	int chunkY = 40;
+	int chunkY = 100;
 	int chunkZ = 16;
 	int xPosCenter;
 	int yPosCenter;
@@ -31,6 +31,7 @@ public class World {
 		xPosCenter = displaySize / 2;
 		yPosCenter = displaySize / 2;
 		chunkArray[xPosCenter][yPosCenter].genPlayerPosition(player);
+		this.seed = System.currentTimeMillis();
 		//this.stepSize = 3;
 		//this.list = GL11.glGenLists(1);
         
@@ -105,6 +106,9 @@ public class World {
 	
 	public void initChunks(Vector3f playerPosition) {
 		int iteration = 0;
+		int chunkOffsetX = 10000;
+		int chunkOffsetY = 10000;
+		
 		for (int i = 0; i < displaySize; i++) {
 			for (int j = 0; j < displaySize; j++) {
 				iteration++;
@@ -112,8 +116,8 @@ public class World {
 				System.out.println("Initializing Chunks: " + loading);
 				
 				Chunk newChunk = new Chunk(chunkX, chunkY, chunkZ, this);
-				newChunk.chunkX = i;
-				newChunk.chunkZ = j;
+				newChunk.chunkX = i + chunkOffsetX;
+				newChunk.chunkZ = j + chunkOffsetY;
 				newChunk.genSeed();
 				
 				chunkSeeds.put(newChunk.getChunkID(), newChunk.seed);
