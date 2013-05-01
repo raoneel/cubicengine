@@ -10,17 +10,16 @@ public class World {
 	ArrayList<Chunk> drawChunks;
 	HashMap<String, Long> chunkSeeds;
 	Player player;
-	Chunk[][] chunkArray;	
+	Chunk[][] chunkArray;
 	Chunk[][] tempArray;
-
+    
 	int chunkX = 16;
-	int chunkY = 100;
+	int chunkY = 40;
 	int chunkZ = 16;
 	int xPosCenter;
 	int yPosCenter;
-	
-	
-	int displaySize = 9;
+	int stepSize = 5;
+	int displaySize = 21;
 	public long seed;
 	
 	public World(Player player) {
@@ -32,28 +31,11 @@ public class World {
 		xPosCenter = displaySize / 2;
 		yPosCenter = displaySize / 2;
 		chunkArray[xPosCenter][yPosCenter].genPlayerPosition(player);
-		
+		//this.stepSize = 3;
 		//this.list = GL11.glGenLists(1);
-  
+        
 	}
-	
-//	public void redrawDisplayList() {
-//		this.draw();
-//		/*
-//         GL11.glNewList(list, GL11.GL_COMPILE);
-//         // Begin drawing
-//         GL11.glBegin(GL11.GL_QUADS);
-//         
-//         
-//         this.draw();
-//         //	    world.drawFloor();
-//         
-//         GL11.glEnd();
-//         GL11.glEndList();
-//         */
-//	}
-	
-	
+    
 	/**
 	 * Redraws the chunks, assuming that cx and cy are the chunk coordinates of the center chunk
 	 * Later, optimize so that all 8 border chunks are not redrawn (we can probably re-use the old ones)
@@ -80,7 +62,7 @@ public class World {
 						if (chunkArray[k][h].chunkX == newChunkX && chunkArray[k][h].chunkZ == newChunkZ) {
 							doesExist = true;
 							newChunk = chunkArray[k][h];
-//							System.out.println("using old chunk");
+							System.out.println("using old chunk");
 							break;
 						}
 					}
@@ -97,8 +79,9 @@ public class World {
 					newChunk.genSeed();
 					newChunk.make();
 					newChunk.makeList();
+					
 				}
-
+                
 				
 				if (chunkSeeds.containsKey(newChunk.getChunkID())) {
 					newChunk.seed = chunkSeeds.get(newChunk.getChunkID());
@@ -111,7 +94,7 @@ public class World {
 				
 			}
 		}
-
+        
 		for (int i = 0; i < displaySize; i++) {
 			for (int j = 0; j <displaySize; j++) {
 				chunkArray[i][j] = tempArray[i][j];
@@ -147,8 +130,8 @@ public class World {
 			for (int j = 0; j < displaySize; j++) {
 				Chunk aChunk = chunkArray[i][j];
 				if (aChunk.inChunk(player)) {
-
-
+                    
+                    
 					if (!(i == xPosCenter && j == yPosCenter)) {
 						System.out.println("Updating chunks...");
 						//System.out.println("Not in center");
@@ -189,6 +172,6 @@ public class World {
 			}
 		}
 	}
-
+    
     
 }

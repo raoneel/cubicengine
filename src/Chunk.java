@@ -16,6 +16,7 @@ public class Chunk {
 	
 	int chunkX;
 	int chunkZ;
+	//int chunkY;
 	float heightMap[][];
 	Noise noise;
 	Cave cave;
@@ -24,6 +25,9 @@ public class Chunk {
 	Cloud cloud;
 	private int list;
 	World world;
+	float worldStep;
+	//float worldStepX;
+	//float worldStepY;
 	
 	public Chunk(int x, int y, int z, World world) {
 		this.world = world;
@@ -32,12 +36,21 @@ public class Chunk {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		random = new Random();
-
-	    this.seed = System.currentTimeMillis();
+		world.seed = 1234l;
+		//this.genSeed();
+		//random = new Random();
+		this.worldStep = world.stepSize;
+		//worldStepX = chunkX;
+		//worldStepY = chunkZ;
+		//this.setNoiseParam(y, 10);
+		//this.noise.generateRandom();
+        //= this.seed = System.currentTimeMillis();
 		this.list = GL11.glGenLists(1);
+		
         
 	}
+	
+	
 	
 	public String getChunkID() {
 		return chunkX + "-" + chunkZ;
@@ -45,10 +58,12 @@ public class Chunk {
 	
 	public void genSeed() {
 		this.seed = (world.seed + " " + this.getChunkID()).hashCode();
+		//System.out.println(world.seed);
 	}
 	
 	public void genTerrain() {
 		// Put all of the custom terrain functions in here
+
 		cloud = new Cloud(this, 0.05f);
 		random.setSeed(seed);
 		cave = new Cave(this);
@@ -56,11 +71,14 @@ public class Chunk {
 		cave.gen(0,10);
 		forest.genTrees();
 		cloud.genClouds();
-		this.setNoiseParam(x, y, 10, 0.09f);
+        this.setNoiseParam(10);
 		this.noise.createHeightMap();
 		this.noise.setBlocks(this);
 		this.water = new Water(this, 0.05f);
 		this.water.genWater();
+
+	
+
 		
 	}
 	
@@ -94,8 +112,9 @@ public class Chunk {
 		worldArray[x][y][z] = type;
 	}
     
-	public void setNoiseParam(int sizeInput, int heightInput, int floorInput, float frequency){
-		this.noise = new Noise(sizeInput, this.seed, heightInput, floorInput, frequency);
+	public void setNoiseParam(int floorInput){
+		//System.out.println(world.stepSize);
+		this.noise = new Noise(this.seed, this.y, floorInput, world.stepSize,this);
 	}
 	
 	public boolean inChunk(Player player) {
@@ -115,6 +134,7 @@ public class Chunk {
     
 	
 	public void make() {
+		this.genSeed();
 		this.genTerrain();
 	    for (int i = 0; i < this.x; i++) {
 	    	
@@ -128,7 +148,7 @@ public class Chunk {
 		    			c.xx = i;
 		    			c.yy = j;
 		    			c.zz = k;
-
+                        
 		    			
 		    			this.cubes.add(c);
 	    			}
@@ -210,7 +230,7 @@ public class Chunk {
 		
 		
 		return worldArray[x][y][z];
-
+        
         
 	}
 	

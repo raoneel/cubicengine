@@ -71,9 +71,9 @@ public class Game {
 	    getDelta();
 	    // call before loop to initialise fps timer
 		lastFPS = getTime();
-
+        
 	    world.make();
-
+        
 		while (!Display.isCloseRequested()) {
 		    // Clear the screen and depth buffer
 			GL11.glClearColor(0, 191/255.0f, 1, 1);
