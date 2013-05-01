@@ -25,6 +25,8 @@ public class Player {
 	public boolean wasRestored;
 	public boolean noClip;
 	public boolean onGround;
+	ArrayList<RigidBodySphere> spheres;
+	public int recharge;
     
     float mouseSensitivity = 2.0f;
     float movementSpeed = 5000.0f; //move 10 units per second
@@ -38,6 +40,8 @@ public class Player {
     public Vector3f accel;
     
     public Player() {
+    	spheres = new ArrayList<RigidBodySphere>();
+    	recharge = 0;
     	camera = new Vector3f(0, 0, 0);
 		lookAt = new Vector3f(0, 0, 500);
 		oldCamera = new Vector3f();
@@ -64,7 +68,7 @@ public class Player {
     }
     
     public AABB getNextAABB(Vector3f velocity){
-    	Vector3f posi = new Vector3f(this.camera.x + velocity.x, this.camera.y + velocity.y, this.camera.z - 200 + velocity.z);
+    	Vector3f posi = new Vector3f(this.camera.x + velocity.x, this.camera.y + velocity.y, this.camera.z + velocity.z);
     	Vector3f extent = this.aabb.extent;
     	AABB newaabb = new AABB(posi, extent);
     	return newaabb;
@@ -141,6 +145,67 @@ public class Player {
     }
     
     public void update(int delta, World world) {
+    	ArrayList<ArrayList<Cube>> cubes = new ArrayList<ArrayList<Cube>>();
+    	for (int i = 0; i < 3; i++) {
+    		for (int j = 0; j < 3; j++) {
+    			cubes.add(world.chunkArray[world.xPosCenter + i - 1][world.yPosCenter + j - 1].cubes);
+    		}
+    	}
+    	
+    	Chunk aChunk = world.chunkArray[world.xPosCenter][world.yPosCenter];
+    	
+    	if(Keyboard.isKeyDown(Keyboard.KEY_G)){
+    		spheres.clear();
+    	}
+    	float deltaT = delta / 1000.0f;
+	//sphere stuff
+	  Vector3f dir = new Vector3f();
+	  Vector3f.sub(lookAt, camera, dir);
+	  dir.normalise();
+	  if(recharge >0){
+		  recharge --;
+	  }
+	  if(recharge == 0 && Keyboard.isKeyDown(Keyboard.KEY_R)){
+		  recharge = 10;
+		  RigidBodySphere newSphere = new RigidBodySphere(100, new Vector3f(lookAt.x, lookAt.y, lookAt.z));
+		  dir.scale(150*newSphere.m);
+		  newSphere.P = dir;
+		  spheres.add(newSphere);
+	  }
+	  for (RigidBodySphere s: spheres){
+		  s.drawSphere();
+		  s.computeVariables();
+		  s.addGravity();
+		  
+		   AABB saabb = new AABB(s.X, new Vector3f(s.radius,s.radius,s.radius));
+		   
+		   for (ArrayList<Cube> chunkCube : cubes) {
+			   for(Cube c: chunkCube){
+			    	if(saabb.intersects(c.aabb)){
+			    		s.sphereBoxCollisionTest(c.aabb);
+			    	}
+			    	
+			    	
+			   }
+		   }
+
+	  }
+	  for(int i = 0; i < spheres.size(); i++){
+		  for(int j = 0; j < spheres.size();j++){
+			  if(j > i){
+				  RigidBodySphere s1 = spheres.get(i);
+				  RigidBodySphere s2 = spheres.get(j);
+				  s1.sphereSphereCollisionTest(s2);
+			  }
+		  }
+	  }
+	  for(RigidBodySphere s: spheres){
+		  s.stepTime(deltaT * 10);
+	  }
+    	
+    	
+    	
+    	
     	this.processInput();
     	//distance in mouse movement from the last getDX() call.
         int dx = Mouse.getDX();
@@ -164,8 +229,7 @@ public class Player {
         
         lookAt.x += right.x * dx * mouseSensitivity;
         lookAt.z += right.z * dx * mouseSensitivity;
-        
-        float deltaT = delta / 1000.0f;
+
         right.scale(movementSpeed * deltaT);
         if(onGround){
         	velocity.y = 0;
@@ -267,27 +331,29 @@ public class Player {
         	
         	//TODO Replace with a AABB hierarchy cube test which could be done in the chunk
             
-        	Chunk aChunk = world.chunkArray[world.xPosCenter][world.yPosCenter];
-        	ArrayList<Cube> cubes = aChunk.cubes;
+        	
+ 		   for (ArrayList<Cube> chunkCube : cubes) {
+ 	            for (Cube c : chunkCube) {
+ 	            	if(c.aabb.onGround(nextaabb)){
+ 	            		hitGround = true;
+ 	            	}
+ 	            	if (c.aabb.intersects(nextaabb)) {
+ 	            		isHit = true;
+ 	            		hitCube = c;
+ 	            		break;
+ 	            	}
+ 	            	if(onGround == false && hitGround == true){
+ 	            		onGround = true;
+ 	            	}
+ 	            	if(onGround == true && hitGround == false && isHit == false){
+ 	            		onGround = false;
+ 	            	}
+ 	            }
+		   }
             
         	
         	
-            for (Cube c : cubes) {
-            	if(c.aabb.onGround(nextaabb)){
-            		hitGround = true;
-            	}
-            	if (c.aabb.intersects(nextaabb)) {
-            		isHit = true;
-            		hitCube = c;
-            		break;
-            	}
-            	if(onGround == false && hitGround == true){
-            		onGround = true;
-            	}
-            	if(onGround == true && hitGround == false && isHit == false){
-            		onGround = false;
-            	}
-            }
+
         }
         else {
         	isHit = false;
@@ -349,8 +415,15 @@ public class Player {
         //Vector3f.sub(velocity, addedSpeed, velocity);
         //  velocity.x = 0;
         // velocity.z = 0;
+    	Vector3f.sub(lookAt, camera, view);
+    	view.normalise();
+    	view.scale(500f);
+    	Vector3f.add(camera, view, lookAt);
+        
         GL11.glLoadIdentity();
     	GLU.gluLookAt(camera.x, camera.y, camera.z, lookAt.x, lookAt.y, lookAt.z, up.x, up.y, up.z);
+    	
+
     	
     }
 }

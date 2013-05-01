@@ -42,9 +42,22 @@ public class Forest {
 	    				chunk.setBlock(x-1,y - 2,z,CubeType.LEAVES);
 	    				chunk.setBlock(x,y - 2,z-1,CubeType.LEAVES);
 	    				chunk.setBlock(x,y - 2,z+1,CubeType.LEAVES);
+	    				
+	    	    		for (int j = x - 2; j < x + 2; j++) {
+	    	    			for (int k = z - 2; k < z+2; k++) {
+	    		    			for (int l = y - 2; l < y+2; l++) {
+	    		    				if (random.nextFloat() > 0.8f) {
+	    		    					chunk.setBlock(j,l,k,CubeType.LEAVES);
+	    		    				}
+	    		    				
+	    		    			}
+	    	    			}
+	    	    		}
 
 	    			}
 	    		}
+	    		
+
 	    		
 	    	}
 	    }

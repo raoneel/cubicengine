@@ -21,6 +21,7 @@ public class Chunk {
 	Cave cave;
 	Forest forest;
 	Water water;
+	Cloud cloud;
 	private int list;
 	World world;
 	
@@ -48,16 +49,18 @@ public class Chunk {
 	
 	public void genTerrain() {
 		// Put all of the custom terrain functions in here
+		cloud = new Cloud(this, 0.05f);
 		random.setSeed(seed);
 		cave = new Cave(this);
-		forest = new Forest(this, 0.167f);
+		forest = new Forest(this, 0.005f);
 		cave.gen(0,10);
-//		forest.genTrees();
-		this.setNoiseParam(x, y, 10, 0.25f);
+		forest.genTrees();
+		cloud.genClouds();
+		this.setNoiseParam(x, y, 10, 0.09f);
 		this.noise.createHeightMap();
 		this.noise.setBlocks(this);
-//		this.water = new Water(this, 0.05f);
-//		this.water.genWater();
+		this.water = new Water(this, 0.05f);
+		this.water.genWater();
 		
 	}
 	
@@ -144,7 +147,7 @@ public class Chunk {
         GL11.glNewList(list, GL11.GL_COMPILE);
         GL11.glBegin(GL11.GL_QUADS);
         for (Cube c: cubes){
-            c.draw(this);
+        	c.draw(this);
         }
         GL11.glEnd();
         GL11.glEndList();
@@ -155,11 +158,8 @@ public class Chunk {
 	
 	
 	public void draw() {
-		/*
-         for (Cube c : cubes) {
-         c.draw(this);
-         }
-         */
+
+         
 		GL11.glCallList(list);
 	}
     

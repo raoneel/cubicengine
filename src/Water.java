@@ -56,10 +56,9 @@ public class Water {
 				// Water falls if nothing is below it
 				if (chunk.getBlock(water.x, water.y - 1, water.z) == 0) {
 					action = true;
-					
-					for (int y = chunk.topBlock(water.x, water.z); y < water.y; y++) {
-						chunk.setBlock(water.x, y, water.z, CubeType.WATER);
-					}
+					int y = chunk.topBlock(water.x, water.z);
+					chunk.setBlock(water.x, y, water.z, CubeType.WATER);
+
 					continue;
 				}
 				
