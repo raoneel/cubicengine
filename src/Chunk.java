@@ -44,9 +44,7 @@ public class Chunk {
 		//this.setNoiseParam(y, 10);
 		//this.noise.generateRandom();
         //= this.seed = System.currentTimeMillis();
-		this.list = GL11.glGenLists(1);
-		
-        
+		this.list = GL11.glGenLists(1);    
 	}
 	
 	
@@ -68,14 +66,14 @@ public class Chunk {
 		cave = new Cave(this);
 		forest = new Forest(this, 0.005f);
 		cave.gen(0,10);
-		forest.genTrees();
+		
 		cloud.genClouds();
         this.setNoiseParam(10);
 		this.noise.createHeightMap();
 		this.noise.setBlocks(this);
 		this.water = new Water(this, 0.05f);
 		this.water.genFloorWater();
-
+		forest.genTrees();
 	
 
 		

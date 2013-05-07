@@ -61,8 +61,8 @@ public class Player {
     	//this.aabb.pos.z = this.camera.z;
     	this.aabb.pos.z = this.camera.z;;
     	
-    	this.aabb.extent.x = 50;
-    	this.aabb.extent.y = 50;
+    	this.aabb.extent.x = 100;
+    	this.aabb.extent.y = 200;
     	this.aabb.extent.z = 100;
     	return this.aabb;
     }

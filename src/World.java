@@ -63,7 +63,7 @@ public class World {
 						if (chunkArray[k][h].chunkX == newChunkX && chunkArray[k][h].chunkZ == newChunkZ) {
 							doesExist = true;
 							newChunk = chunkArray[k][h];
-							System.out.println("using old chunk");
+//							System.out.println("using old chunk");
 							break;
 						}
 					}
@@ -127,6 +127,10 @@ public class World {
 		}
 	}
 	
+	public int getBlock(Chunk chunk, int x, int y, int z) {
+		return 1;
+	}
+	
 	public void update(Player player, int list) {
 		//this.list = list;
 		//Find what chunk the player is in
@@ -137,7 +141,7 @@ public class World {
                     
                     
 					if (!(i == xPosCenter && j == yPosCenter)) {
-						System.out.println("Updating chunks...");
+//						System.out.println("Updating chunks...");
 						//System.out.println("Not in center");
 						//We left the center chunk here, so we need to redraw everything
 						//First, make the current chunk the center chunk
