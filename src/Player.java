@@ -30,7 +30,7 @@ public class Player {
     
     float mouseSensitivity = 2.0f;
     float movementSpeed = 5000.0f; //move 10 units per second
-    float gravity = 100;
+    float gravity = 40;
     float jumpDistance = 2000;
     
     private float vx;

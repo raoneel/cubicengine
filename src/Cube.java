@@ -93,7 +93,7 @@ public class Cube {
 
 		
 		
-		if (world.getBlock(xx, yy, zz - 1) < 1) {
+		if (world.getWorldBlock(xx, yy, zz - 1) < 1) {
 			//front - Along z axis
 			GL11.glNormal3f(0, 0, 1);
 		    GL11.glVertex3f(x, y, z);
@@ -103,7 +103,7 @@ public class Cube {
 		}
 		
 		
-		if (world.getBlock(xx, yy, zz + 1) < 1) {
+		if (world.getWorldBlock(xx, yy, zz + 1) < 1) {
 			GL11.glNormal3f(0, 0, -1);
 		    //back
 		    GL11.glVertex3f(x, y, z + width);
@@ -112,7 +112,7 @@ public class Cube {
 		    GL11.glVertex3f(x, y - width, z + width);
 		}
 	    
-		if (world.getBlock(xx, yy - 1, zz) < 1) {
+		if (world.getWorldBlock(xx, yy - 1, zz) < 1) {
 
 			GL11.glNormal3f(0, -1, 0);
 		    //bottom - Along y axis
@@ -122,7 +122,7 @@ public class Cube {
 		    GL11.glVertex3f(x + width, y - width, z);
 		}
 
-		if (world.getBlock(xx, yy + 1, zz)< 1) {
+		if (world.getWorldBlock(xx, yy + 1, zz) < 1) {
 
 
 		    GL11.glNormal3f(0, 1, 0);
@@ -133,7 +133,7 @@ public class Cube {
 		    GL11.glVertex3f(x + width, y, z);
 		}
 
-		if (world.getBlock(xx - 1, yy, zz) < 1) {
+		if (world.getWorldBlock(xx - 1, yy, zz) < 1) {
 			
 		    GL11.glNormal3f(1, 0, 0);
 		    //left - Along x axis
@@ -143,7 +143,7 @@ public class Cube {
 		    GL11.glVertex3f(x, y - width, z);
 		}
 	    
-		if (world.getBlock(xx + 1, yy, zz) < 1) {
+		if (world.getWorldBlock(xx + 1, yy, zz) < 1) {
 			
 		    GL11.glNormal3f(-1, 0, 0);
 		    //right
