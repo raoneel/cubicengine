@@ -14,8 +14,14 @@ public class Chunk {
 	Random random;
 	public long seed;
 	
+	//The real world coordinate offset of the chunk
 	int chunkX;
 	int chunkZ;
+	
+	//The array indices of the chunk
+	int arrayX;
+	int arrayZ;
+	
 	//int chunkY;
 	float heightMap[][];
 	Noise noise;
@@ -143,11 +149,13 @@ public class Chunk {
 	    			
 	    			if (this.drawGetBlock(i, j, k) > 0) {
 	    				//Offset the cubes by the chunk offset
+	    				
+	    				
+	    				
 		    			Cube c = new Cube(i * 200 + (200 * this.x) * chunkX, j * 200, k * 200 + (200 * this.z) * chunkZ, 200,this.getBlock(i, j, k) );
 		    			c.xx = i;
 		    			c.yy = j;
 		    			c.zz = k;
-                        
 		    			
 		    			this.cubes.add(c);
 	    			}
@@ -181,6 +189,10 @@ public class Chunk {
          
 		GL11.glCallList(list);
 	}
+	
+	public int getWorldBlock(int x, int y, int z) {
+		return world.getBlock(this, x, y, z);
+	}
     
 	
 	/**
@@ -191,6 +203,9 @@ public class Chunk {
 	 * @return
 	 */
 	public int drawGetBlock(int x, int y, int z) {
+		
+
+		
 		//Return 0 for out of bounds
 		if (x < 0 || y < 0 || z < 0) {
 			return 0;
@@ -200,10 +215,10 @@ public class Chunk {
 			return 0;
 		}
 		
-        //		if (x*y*z == 0) {
-        //			return 0;
-        //		}
-        //
+//		if (x*y*z == 0) {
+//			return 0;
+//		}
+        
 		
 		// check if the block is visible
 		boolean edge = false;

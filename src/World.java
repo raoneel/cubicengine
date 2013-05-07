@@ -19,7 +19,7 @@ public class World {
 	int xPosCenter;
 	int yPosCenter;
 	int stepSize = 5;
-	int displaySize = 21;
+	int displaySize =21;
 	public long seed;
 	
 	public World(Player player) {
@@ -63,7 +63,7 @@ public class World {
 						if (chunkArray[k][h].chunkX == newChunkX && chunkArray[k][h].chunkZ == newChunkZ) {
 							doesExist = true;
 							newChunk = chunkArray[k][h];
-							System.out.println("using old chunk");
+//							System.out.println("using old chunk");
 							break;
 						}
 					}
@@ -75,11 +75,12 @@ public class World {
 				
 				if (!doesExist) {
 					newChunk = new Chunk(chunkX, chunkY, chunkZ, this);
+
+					
 					newChunk.chunkX = newChunkX;
 					newChunk.chunkZ = newChunkZ;
 					newChunk.genSeed();
 					newChunk.make();
-					newChunk.makeList();
 					
 				}
                 
@@ -91,6 +92,8 @@ public class World {
 					chunkSeeds.put(newChunk.getChunkID(), newChunk.seed);
 				}
 				
+				newChunk.arrayX = i;
+				newChunk.arrayZ = j;
 				tempArray[i][j] = newChunk;
 				
 			}
@@ -102,12 +105,14 @@ public class World {
 			}
 		}
 		
+		makeList();
+		
 	}
 	
 	public void initChunks(Vector3f playerPosition) {
 		int iteration = 0;
-		int chunkOffsetX = 10000;
-		int chunkOffsetY = 10000;
+		int chunkOffsetX = 1000;
+		int chunkOffsetY = 1000;
 		
 		for (int i = 0; i < displaySize; i++) {
 			for (int j = 0; j < displaySize; j++) {
@@ -116,11 +121,15 @@ public class World {
 				System.out.println("Initializing Chunks: " + loading);
 				
 				Chunk newChunk = new Chunk(chunkX, chunkY, chunkZ, this);
+				
+
 				newChunk.chunkX = i + chunkOffsetX;
 				newChunk.chunkZ = j + chunkOffsetY;
 				newChunk.genSeed();
 				
 				chunkSeeds.put(newChunk.getChunkID(), newChunk.seed);
+				newChunk.arrayX = i;
+				newChunk.arrayZ = j;
 				chunkArray[i][j] = newChunk;
 				
 			}
@@ -139,9 +148,12 @@ public class World {
 					if (!(i == xPosCenter && j == yPosCenter)) {
 						System.out.println("Updating chunks...");
 						//System.out.println("Not in center");
+//						System.out.println("In chunk " + i + "-" + j);
 						//We left the center chunk here, so we need to redraw everything
 						//First, make the current chunk the center chunk
 						tempArray[xPosCenter][yPosCenter] = aChunk;
+						aChunk.arrayX = xPosCenter;
+						aChunk.arrayZ = yPosCenter;
 						this.redrawChunks(aChunk.chunkX, aChunk.chunkZ);
 						return;
 					}
@@ -151,12 +163,83 @@ public class World {
 		
 	}
 	
+	/** Allows chunks to access blocks from other chunks, especially for optimizing performance
+	 * for face occlusion.
+	 * @param chunk
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return
+	 */
+	public int getBlock(Chunk chunk, int x, int y, int z) {
+		if (x >= 0 && x < chunk.x && y >= 0 && y < chunk.y && z >= 0 && z < chunk.z) {
+			return chunk.getBlock(x, y, z);
+		}
+		else {
+			
+			int newX = x;
+			int newY = y;
+			int newZ = z;
+			
+			int chunkX = chunk.arrayX;
+			int chunkZ = chunk.arrayZ;
+			
+			if (x >= chunk.x) {
+				newX = x - chunk.x;
+				chunkX += 1;
+			}
+			else if (x < 0) {
+				newX = chunk.x + x;
+				chunkX -= 1;
+			}
+			
+			if (z >= chunk.z) {
+				newZ = z - chunk.z;
+				chunkZ += 1;
+//				return 1;
+			}
+			else if (z < 0) {
+				newZ = chunk.z + z;
+				chunkZ -= 1;
+//				return 1;
+			}
+			
+			if (chunkX >= displaySize || chunkX < 0 || chunkZ < 0 || chunkZ >= displaySize) {
+				return 1;
+			}
+			
+			if (y < 0) {
+				return 1;
+			}
+			else if (y >= this.chunkY) {
+				return -1;
+			}
+			
+//			return -1;
+			return chunkArray[chunkX][chunkZ].getBlock(newX, newY, newZ);
+		}
+	}
+	
 	
 	public void draw() {
 		for (int i = 0; i < displaySize; i++) {
 			for (int j = 0; j < displaySize; j++) {
 				Chunk aChunk = chunkArray[i][j];
 				aChunk.draw();
+			}
+		}
+	}
+	
+	public void makeList() {
+		int iterations = 0;
+		for (int i = 0; i < displaySize; i++) {
+			for (int j = 0; j < displaySize; j++) {
+				iterations++;
+				float loading = iterations / (displaySize * displaySize * 1.0f);
+				
+//				System.out.println("Caching world: " + loading);
+				Chunk aChunk = chunkArray[i][j];
+				aChunk.makeList();
 			}
 		}
 	}
@@ -175,6 +258,9 @@ public class World {
 				aChunk.makeList();
 			}
 		}
+		
+		makeList();
+		
 	}
     
     
