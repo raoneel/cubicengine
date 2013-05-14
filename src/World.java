@@ -14,12 +14,12 @@ public class World {
 	Chunk[][] tempArray;
     
 	int chunkX = 16;
-	int chunkY = 100;
+	int chunkY = 128;
 	int chunkZ = 16;
 	int xPosCenter;
 	int yPosCenter;
-	int stepSize = 5;
-	int displaySize =21;
+	int stepSize = 2;
+	int displaySize =11;
 	public long seed;
 	
 	public World(Player player) {
@@ -43,7 +43,7 @@ public class World {
 	 * @param cx New center chunk x
 	 * @param cz New center chunk z
 	 */
-	public void redrawChunks(int cx, int cz) {
+	public void redrawChunks(int cx, int cz, int offsetX, int offsetZ) {
 		for (int i = 0; i < displaySize; i++) {
 			for (int j = 0; j < displaySize; j++) {
 				
@@ -105,7 +105,39 @@ public class World {
 			}
 		}
 		
-		makeList();
+		if (offsetX - xPosCenter == 1) {
+			System.out.println("optimizing");
+			for (int j = 0; j < displaySize; j++) {
+				chunkArray[displaySize - 1][j].makeList();
+				chunkArray[displaySize - 2][j].makeList();
+			}
+		}
+		
+		if (offsetX - xPosCenter == -1) {
+			System.out.println("optimizing");
+			for (int j = 0; j < displaySize; j++) {
+				chunkArray[0][j].makeList();
+				chunkArray[1][j].makeList();
+			}
+		}
+		
+		if (offsetZ - yPosCenter == -1) {
+			System.out.println("optimizing");
+			for (int j = 0; j < displaySize; j++) {
+				chunkArray[j][0].makeList();
+				chunkArray[j][1].makeList();
+			}
+		}
+		
+		if (offsetZ - yPosCenter == 1) {
+			System.out.println("optimizing");
+			for (int j = 0; j < displaySize; j++) {
+				chunkArray[j][displaySize - 1].makeList();
+				chunkArray[j][displaySize - 2].makeList();
+			}
+		}
+		
+//		makeList();
 		
 	}
 	
@@ -154,7 +186,7 @@ public class World {
 						tempArray[xPosCenter][yPosCenter] = aChunk;
 						aChunk.arrayX = xPosCenter;
 						aChunk.arrayZ = yPosCenter;
-						this.redrawChunks(aChunk.chunkX, aChunk.chunkZ);
+						this.redrawChunks(aChunk.chunkX, aChunk.chunkZ, i, j);
 						return;
 					}
 				}

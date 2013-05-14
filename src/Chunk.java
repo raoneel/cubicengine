@@ -74,22 +74,19 @@ public class Chunk {
 		cave = new Cave(this);
 		forest = new Forest(this, 0.005f);
 		cave.gen(0,10);
-		forest.genTrees();
+		
 		cloud.genClouds();
         this.setNoiseParam(10);
 		this.noise.createHeightMap();
 		this.noise.setBlocks(this);
 		this.water = new Water(this, 0.05f);
 		this.water.genFloorWater();
-
-	
-
-		
+		forest.genTrees();
 	}
 	
 	public int topBlock(int x, int z) {
 		for (int y = this.y; y > 0; y--) {
-			if (this.getBlock(x, y, z) == 1) {
+			if (this.getBlock(x, y, z) > 0 && this.getBlock(x, y, z) != CubeType.CLOUD) {
 				return y;
 			}
 		}

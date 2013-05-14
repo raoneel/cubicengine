@@ -24,7 +24,12 @@ public class Forest {
 	    		}
 
 	    		int start = chunk.topBlock(x, z);
-	    		int randHeight = random.nextInt() % (chunk.y - start);
+	    		
+	    		if (chunk.getBlock(x, start,z) == CubeType.WATER) {
+	    			continue;
+	    		}
+	    		
+	    		int randHeight = random.nextInt() % 50 + 20;
 	    		for (int y = start; y < randHeight; y++) {
 	    			chunk.setBlock(x, y, z, CubeType.DIRT);
 	    			
