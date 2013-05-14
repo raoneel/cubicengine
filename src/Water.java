@@ -28,12 +28,12 @@ public class Water {
 		this.frequency = frequency;
 	}
 	
-	public void genFloorWater() {
+	public void genFloorWater(int floor) {
 		for (int x = 0; x < chunk.x; x++) {
 			for (int z = 0; z < chunk.z; z++) {
 				int topBlock = chunk.topBlock(x, z) + 1;
-				if (topBlock < 29) {
-					for (int y = topBlock; y < 29; y++) {
+				if (topBlock < floor) {
+					for (int y = topBlock; y < floor; y++) {
 						chunk.setBlock(x, y, z, CubeType.WATER);
 					}
 					

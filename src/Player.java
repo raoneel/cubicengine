@@ -168,7 +168,7 @@ public class Player {
 	  if(recharge == 0 && Keyboard.isKeyDown(Keyboard.KEY_R)){
 		  recharge = 10;
 		  RigidBodySphere newSphere = new RigidBodySphere(100, new Vector3f(lookAt.x, lookAt.y, lookAt.z));
-		  dir.scale(150*newSphere.m);
+		  dir.scale(30*newSphere.m);
 		  newSphere.P = dir;
 		  spheres.add(newSphere);
 	  }

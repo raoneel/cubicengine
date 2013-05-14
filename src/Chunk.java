@@ -34,6 +34,7 @@ public class Chunk {
 	float worldStep;
     int chunkSize;
     int height;
+    int waterHeight;
 	//float worldStepX;
 	//float worldStepY;
 	
@@ -54,7 +55,8 @@ public class Chunk {
         //= this.seed = System.currentTimeMillis();
 		this.list = GL11.glGenLists(1);
         chunkSize = world.chunkX;
-        height = world.chunkY - 20;
+        height = world.chunkY-80;
+        waterHeight = 20;
 	}
 	
 	
@@ -82,7 +84,7 @@ public class Chunk {
 		this.noise.createHeightMap();
 		this.noise.setBlocks(this);
 		this.water = new Water(this, 0.05f);
-		this.water.genFloorWater();
+		this.water.genFloorWater(waterHeight);
 		forest.genTrees();
 
 	}
@@ -117,7 +119,7 @@ public class Chunk {
 		worldArray[x][y][z] = type;
 	}
     
-	public void setNoiseParam(int floorInput){
+	public void setNoiseParam(int heightInput,int floorInput){
 		//System.out.println(world.stepSize);
 		this.noise = new Noise(this.seed, this.y, floorInput, world.stepSize,this);
 	}

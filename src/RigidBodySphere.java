@@ -29,7 +29,7 @@ public class RigidBodySphere {
 	Vector3f force;
 	Vector3f torque;
 	boolean[] hitSides = new boolean[6];
-	boolean friction = false;
+	boolean friction = true;
 	
 public RigidBodySphere(float radius, Vector3f center){
 	m = 100;
@@ -60,15 +60,16 @@ public RigidBodySphere(float radius, Vector3f center){
 }
 
 public void drawSphere(){
+	
 	GL11.glPushMatrix();
-	//R.transpose();
+	GL11.glColor3f(1.0f, 0.0f, 0.0f);
+	R.transpose();
 	Vector3f xAxis = new Vector3f(R.m00, R.m10, R.m20);
 	Vector3f yAxis = new Vector3f(R.m01, R.m11, R.m21);
 	Vector3f zAxis = new Vector3f(R.m02, R.m12, R.m22);
 	xAxis.normalise();
 	yAxis.normalise();
 	zAxis.normalise();
-	
 	
 	FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
 	buffer.put(xAxis.x);
@@ -88,12 +89,12 @@ public void drawSphere(){
 	buffer.put(0);
 	buffer.put(1);
 	buffer.flip();
-	//R.transpose();
+	R.transpose();
 	
 	GL11.glTranslatef(X.x, X.y, X.z);
 	GL11.glMultMatrix(buffer);
 	Sphere sphere = new Sphere();
-	sphere.draw(radius, 10,10);
+	sphere.draw(radius, 20,20);
 	GL11.glPopMatrix();
 	
 }
@@ -142,10 +143,10 @@ public void stepTime(float t){
 	//L.x = 0;
 	//L.y = 0;
 	//L.z = 0;
-//	System.out.println(R);
+	//System.out.println(R);
 	//System.out.println(R);
 	//System.out.println(torque);
-//	System.out.println(L);
+	//System.out.println(L);
 	//System.out.println(X);
 	//add force and torque to momentum, then recompute velocities
 	Vector3f.add(P, force, P);
@@ -155,6 +156,39 @@ public void stepTime(float t){
 	v.x = P.x/m;
 	v.y = P.y/m;
 	v.z = P.z/m;
+	
+	//L.x = v.x;
+	//L.y = 0;
+	//L.z = v.z;
+	//L.scale(-0.005f);
+	
+	double theta = 10;
+	Vector3f temp = new Vector3f(v.x, 0, v.z);
+	float vlen = temp.length();
+	theta = vlen;
+	temp.normalise();
+	Vector3f up = new Vector3f(0,1,0);
+	Vector3f aor = new Vector3f();
+	Vector3f.cross(temp, up, aor);
+	double thetax = aor.x * theta;
+	double thetaz = aor.z * theta;
+	
+	Matrix3f xrot = new Matrix3f();
+	xrot.setIdentity();
+	xrot.m11 = (float) (Math.cos(Math.toRadians(thetax)));
+	xrot.m12 = (float) (-1*Math.sin(Math.toRadians(thetax)));
+	xrot.m21 = (float) (Math.sin(Math.toRadians(thetax)));
+	xrot.m22 = xrot.m11;
+	
+	Matrix3f zrot = new Matrix3f();
+	zrot.setIdentity();
+	zrot.m00 = (float) (Math.cos(Math.toRadians(thetaz)));
+	zrot.m01 = (float) (-1 * Math.sin(Math.toRadians(thetaz)));
+	zrot.m10 = (float) (Math.sin(Math.toRadians(thetaz)));
+	zrot.m11 = zrot.m00;
+	
+	
+	
 	Matrix3f.transform(Iinv, L, omega);
 	//v.scale(t);
 	//v.y = 1;
@@ -172,6 +206,7 @@ public void stepTime(float t){
 	float temp1 = (float) Math.sin(theta);
 	Matrix3f temp = new Matrix3f();
 	*/
+	
 	Matrix3f omegastar = new Matrix3f();
 	omegastar.m00 = 0.0f;
 	omegastar.m01 = -1*omega.z;
@@ -197,10 +232,15 @@ public void stepTime(float t){
 	*/
 	
 	Matrix3f.mul(omegastar, R, Rdot);
-//	System.out.println("omega");
-//	System.out.println(omega);
-	Matrix3f.add(R, Rdot, R);
-	orthoNormalize(R);
+	//System.out.println("omega");
+	//System.out.println(omega);
+	//Matrix3f.add(R, Rdot, R);
+	Matrix3f.mul(zrot, xrot, xrot);
+	Matrix3f tempM = new Matrix3f();
+	tempM.setIdentity();
+	//System.out.println(xrot);
+	Matrix3f.mul(xrot, R, R);
+	//orthoNormalize(R);
 	
 	/*
 	Vector3f xAxis = new Vector3f(R.m00, R.m10, R.m20);
@@ -244,8 +284,8 @@ public void computeVariables(){
 	Matrix3f.transpose(R, Rt);
 	Matrix3f.mul(R, Ibodyinv, temp);
 	Matrix3f.mul(temp, Rt, Iinv);
-//	System.out.println("Iinv");
-//	System.out.println(Iinv);
+	//System.out.println("Iinv");
+	//System.out.println(Iinv);
 	
 	//calculate omega
 	Matrix3f.transform(Iinv, L, omega);
@@ -479,7 +519,7 @@ public void sphereSphereCollisionTest(RigidBodySphere sphere2){
 	if(dist > (radius + sphere2.radius) || dist < radius){
 		return;
 	}
-//	System.out.println("SphereCollision");
+	//System.out.println("SphereCollision");
 	temp.normalise();
 	Vector3f normal = new Vector3f(temp.x, temp.y, temp.z);
 	//normal.scale(-1);
@@ -490,7 +530,7 @@ public void sphereSphereCollisionTest(RigidBodySphere sphere2){
 }
 
 public void sphereSphereCollision(RigidBodySphere s2, Vector3f point, Vector3f normal){
-//	System.out.println(normal);
+	//System.out.println(normal);
 	Vector3f pva = new Vector3f();
 	Vector3f pvb = new Vector3f();
 	Vector3f temp = new Vector3f();
@@ -511,7 +551,7 @@ public void sphereSphereCollision(RigidBodySphere s2, Vector3f point, Vector3f n
 	if(vrelative > 0){
 		return;
 	}
-//	System.out.println("hit each other");
+	System.out.println("hit each other");
 	//System.out.println(vrelative);
 	float num = -(1+epsilon) * vrelative;
 	float num2 = 1/m;
@@ -527,7 +567,7 @@ public void sphereSphereCollision(RigidBodySphere s2, Vector3f point, Vector3f n
 	Matrix3f.transform(Iinv, temp, temp);
 	Vector3f.cross(temp, ra, temp);
 	float num4 = Vector3f.dot(normal, temp);
-//	System.out.println(num4);
+	//System.out.println(num4);
 	
 	Vector3f.cross(rb, normal, temp);
 	Matrix3f.transform(s2.Iinv, temp, temp);
@@ -538,9 +578,9 @@ public void sphereSphereCollision(RigidBodySphere s2, Vector3f point, Vector3f n
 	//j*= 1000000;
 	Vector3f f = new Vector3f(normal.x*j, normal.y*j, normal.z*j);
 	
-//	System.out.println(j);
 	//System.out.println(j);
-//	System.out.println(f);
+	//System.out.println(j);
+	//System.out.println(f);
 	Vector3f.add(force, f, force);
 	Vector3f.sub(s2.force, f, s2.force);
 	

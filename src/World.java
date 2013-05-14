@@ -18,8 +18,8 @@ public class World {
 	int chunkZ = 16;
 	int xPosCenter;
 	int yPosCenter;
-	int stepSize = 2;
-	int displaySize =11;
+	int stepSize = 3;
+	int displaySize = 19;
 	public long seed;
 	
 	public World(Player player) {
@@ -31,7 +31,8 @@ public class World {
 		xPosCenter = displaySize / 2;
 		yPosCenter = displaySize / 2;
 		chunkArray[xPosCenter][yPosCenter].genPlayerPosition(player);
-		this.seed = System.currentTimeMillis();
+		//this.seed = System.currentTimeMillis();
+		this.seed = 123423L;
 		//this.stepSize = 3;
 		//this.list = GL11.glGenLists(1);
         
@@ -168,9 +169,6 @@ public class World {
 		}
 	}
 	
-	public int getBlock(Chunk chunk, int x, int y, int z) {
-		return 1;
-	}
 	
 	public void update(Player player, int list) {
 		//this.list = list;

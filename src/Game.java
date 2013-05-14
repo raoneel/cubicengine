@@ -132,12 +132,13 @@ public class Game {
 		float fog[] = { 0.5f, 0.5f, 0.5f, 1.0f }; // fog color
 		
 		
-		// My sad attempt at fog...
-//		GL11.glEnable(GL11.GL_FOG);
-//		GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP2);
-//		GL11.glFog(GL11.GL_FOG_COLOR, (FloatBuffer)temp.asFloatBuffer().put(fog).flip());
-//		GL11.glFogf(GL11.GL_FOG_DENSITY, density);	
-//		GL11.glHint (GL11.GL_FOG_HINT, GL11.GL_NICEST);
+		GL11.glEnable(GL11.GL_FOG);
+		GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
+		GL11.glFog(GL11.GL_FOG_COLOR, (FloatBuffer)temp.asFloatBuffer().put(fog).flip());
+		GL11.glFogf(GL11.GL_FOG_DENSITY, density);	
+		GL11.glHint (GL11.GL_FOG_HINT, GL11.GL_NICEST);
+		GL11.glFogf(GL11.GL_FOG_START,12000f);
+		GL11.glFogf(GL11.GL_FOG_END,30000f);
     }
     
 	/**
