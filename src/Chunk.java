@@ -32,6 +32,8 @@ public class Chunk {
 	private int list;
 	World world;
 	float worldStep;
+    int chunkSize;
+    int height;
 	//float worldStepX;
 	//float worldStepY;
 	
@@ -50,7 +52,9 @@ public class Chunk {
 		//this.setNoiseParam(y, 10);
 		//this.noise.generateRandom();
         //= this.seed = System.currentTimeMillis();
-		this.list = GL11.glGenLists(1);    
+		this.list = GL11.glGenLists(1);
+        chunkSize = world.chunkX;
+        height = world.chunkY - 20;
 	}
 	
 	
@@ -74,7 +78,7 @@ public class Chunk {
 		cave.gen(0,10);
 		
 		cloud.genClouds();
-        this.setNoiseParam(10);
+        this.setNoiseParam(height,0);
 		this.noise.createHeightMap();
 		this.noise.setBlocks(this);
 		this.water = new Water(this, 0.05f);

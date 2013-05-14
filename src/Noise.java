@@ -13,7 +13,9 @@ public class Noise {
     int amplitude;// = 3;
     float heightMap[][];// = new float[size][size];
     float smoothMap[][];
+    int chunkSize;
     Chunk chunk;
+    
     // float tempValue = 0.0f
     
     //int randomNums[][] = new int[size][size];
@@ -34,6 +36,8 @@ public class Noise {
 		this.heightMap = new float[chunk.x][chunk.x];
 		this.smoothMap = new float[chunk.x][chunk.x];
 		this.chunk = chunk;
+		height = chunk.height;
+		chunkSize = chunk.chunkSize;
 		//this.generateRandom();
 	}
 	
@@ -42,25 +46,25 @@ public class Noise {
 		tempChunkS.chunkX = chunk.chunkX - (chunk.chunkX%frequency);
 		tempChunkS.chunkZ = chunk.chunkZ - (chunk.chunkZ%frequency);
 		tempChunkS.genSeed();
-		tempChunkS.setNoiseParam(10);
+		tempChunkS.setNoiseParam(height,0);
 		tempChunkS.noise.generateRandom();
 		Chunk tempChunkX = new Chunk(chunk.x,chunk.y,chunk.z,chunk.world);
 		tempChunkX.chunkX = chunk.chunkX + frequency - (chunk.chunkX%frequency);
 		tempChunkX.chunkZ = chunk.chunkZ - (chunk.chunkZ%frequency);
 		tempChunkX.genSeed();
-		tempChunkX.setNoiseParam(10);
+		tempChunkX.setNoiseParam(height,0);
 		tempChunkX.noise.generateRandom();
 		Chunk tempChunkZ = new Chunk(chunk.x,chunk.y,chunk.z,chunk.world);
 		tempChunkZ.chunkX = chunk.chunkX - (chunk.chunkX%frequency);
 		tempChunkZ.chunkZ = chunk.chunkZ + frequency - (chunk.chunkZ%frequency);
 		tempChunkZ.genSeed();
-		tempChunkZ.setNoiseParam(10);
+		tempChunkZ.setNoiseParam(height,0);
 		tempChunkZ.noise.generateRandom();
 		Chunk tempChunkXZ = new Chunk(chunk.x,chunk.y,chunk.z,chunk.world);
 		tempChunkXZ.chunkX = chunk.chunkX + frequency - (chunk.chunkX%frequency);
 		tempChunkXZ.chunkZ = chunk.chunkZ + frequency - (chunk.chunkZ%frequency);
 		tempChunkXZ.genSeed();
-		tempChunkXZ.setNoiseParam(10);
+		tempChunkXZ.setNoiseParam(height,0);
 		tempChunkXZ.noise.generateRandom();
 		
 		/*
@@ -78,12 +82,12 @@ public class Noise {
         
     	float intermediateZ = ((float)chunk.chunkZ%frequency * chunk.z)/(frequency * chunk.z);
     	float intermediateStep = (1.0f/(float)(frequency * chunk.z));
-    	for (int i = 0; i < 16; i++){
+    	for (int i = 0; i < chunkSize; i++){
     		float i1 = cosineInterp(v1,v2,intermediateZ);
     		float i2 = cosineInterp(v3,v4,intermediateZ);
     		intermediateZ += intermediateStep;
     		float intermediateX = ((float)chunk.chunkX%frequency * chunk.x)/(frequency * chunk.x);
-    		for (int j = 0; j < 16; j++){
+    		for (int j = 0; j < chunkSize; j++){
     			float ans = cosineInterp(i1, i2, intermediateX);
     			heightMap[j][i] = Math.round(ans);
     			intermediateX += intermediateStep;
@@ -137,8 +141,8 @@ public class Noise {
     	return a*(1-f) + b*f;
     }
 	public void generateRandom(){
-    	for (int i = 0; i < 16; i++){
-    		for (int j = 0; j < 16; j++){
+    	for (int i = 0; i < chunkSize; i++){
+    		for (int j = 0; j < chunkSize; j++){
     			this.randomNums[i][j] = this.gen.nextInt(this.height -1 +1) +this.floor;
     		}
     	}
@@ -175,8 +179,8 @@ public class Noise {
 	}
 	
 	public void setBlocks(Chunk chunk) {
-		for (int x = 0; x < 16; x++) {
-			for (int z = 0; z < 16; z++) {
+		for (int x = 0; x < chunkSize; x++) {
+			for (int z = 0; z < chunkSize; z++) {
 				int height = (int)heightMap[x][z];
 				for (int y = 0; y < height; y++) {
                     
