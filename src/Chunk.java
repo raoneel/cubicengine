@@ -50,9 +50,7 @@ public class Chunk {
 		//this.setNoiseParam(y, 10);
 		//this.noise.generateRandom();
         //= this.seed = System.currentTimeMillis();
-		this.list = GL11.glGenLists(1);
-		
-        
+		this.list = GL11.glGenLists(1);    
 	}
 	
 	
@@ -82,6 +80,7 @@ public class Chunk {
 		this.water = new Water(this, 0.05f);
 		this.water.genFloorWater();
 		forest.genTrees();
+
 	}
 	
 	public int topBlock(int x, int z) {
