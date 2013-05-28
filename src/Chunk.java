@@ -190,11 +190,9 @@ public class Chunk {
         for (Cube c: cubes){
         	c.draw(this);
         }
-        for (Cube c: spawnedCubes){
-        	c.draw(this);
-        }
-      
-        
+        //for (Cube c: spawnedCubes){
+        	//c.draw(this);
+        //}
         GL11.glEnd();
         GL11.glEndList();
         //  isMade = true;
@@ -285,11 +283,22 @@ public class Chunk {
 		player.translate((200 * this.x) * chunkX,(200 * this.y),(200 * this.z) * chunkZ);
 	}
 	public void spawnCube(Cube newCube){
-		cubes.add(newCube);
-		//genSeed();
-		//make();
-		//System.out.println("MADE");
-		this.makeList();
+		boolean cubeFound = false;
+		for (Cube c: cubes){
+			  if(c.pos.x == newCube.pos.x && c.pos.y == newCube.pos.y && c.pos.z == newCube.pos.z){
+				  System.out.println("CUBE FOUND");
+				  cubeFound = true;
+				  break;
+			  }
+		}
+		if(!cubeFound){
+			cubes.add(newCube);
+			//genSeed();
+			//make();
+			//System.out.println("MADE");
+			this.makeList();
+		}
+		
 		
 	}
 	public void destroyCube(int index){

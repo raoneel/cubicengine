@@ -185,10 +185,9 @@ public class Player {
 		  tempZ = (Math.round(tempZ/200))*200;
 		  //RigidBodySphere newSphere = new RigidBodySphere(100, new Vector3f(lookAt.x, lookAt.y, lookAt.z));
 		  //Cube newCube = new Cube(lookAt.x, lookAt.y, lookAt.z,200,CubeType.DIRT);
-		  Cube newCube = new Cube(tempX, tempY, tempZ,200,CubeType.DIRT);
-		  newCube.xx = tempX/200;
-		  newCube.yy = tempY/200;
-		  newCube.zz = tempZ/200;
+		  
+	
+		 
 		  //newCube.xx = (int)Math.round(lookAt.x/200);
 		  //System.out.println(newCube.xx);
 		  //newCube.yy = (int)Math.round(lookAt.y/200);
@@ -197,14 +196,13 @@ public class Player {
 		  Chunk currentChunk = world.chunkArray[world.xPosCenter][world.yPosCenter];
 	//	  System.out.println(tempX);
 		//  currentChunk.setBlock(tempX, tempY, tempZ, CubeType.DIRT);
+		  System.out.println("BLOCK SPAWNED");
+		  Cube newCube = new Cube(tempX, tempY, tempZ,200,CubeType.DIRT);
+		  newCube.xx = tempX/200;
+		  newCube.yy = tempY/200;
+		  newCube.zz = tempZ/200;
 		  currentChunk.spawnCube(newCube);
-		 // currentChunk.genSeed();
-		  //currentChunk.make();
-		  //currentChunk.makeList();
-		  //world.chunkArray[world.xPosCenter][world.yPosCenter] = currentChunk;
-		  //dir.scale(30*newSphere.m);
-		  //newSphere.P = dir;
-		  //spheres.add(newSphere);
+
 	  }
 	  if(recharge == 0 && Keyboard.isKeyDown(Keyboard.KEY_X)){
 		  recharge = 10;
@@ -218,13 +216,14 @@ public class Player {
 		  
 		  Chunk currentChunk = world.chunkArray[world.xPosCenter][world.yPosCenter];
 
-		  //int toDestroy = 0;
 		  for(Cube c: currentChunk.cubes){
 			  if(c.pos.x == tempX && c.pos.y == tempY && c.pos.z == tempZ){
+				  System.out.println(c.pos.x);
+				  System.out.println(tempX);
 				  System.out.println("BLOCK FOUND");
 				  System.out.println(currentChunk.cubes.indexOf(c));
 				  currentChunk.destroyCube(currentChunk.cubes.indexOf(c));
-				  currentChunk.removeBlock(tempX, tempY, tempZ);
+				  //currentChunk.removeBlock(tempX, tempY, tempZ);
 				  break;
 			  }
 
