@@ -244,12 +244,9 @@ public class Player {
         	velocity.z = 0;
         }
         
-        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-        	movementSpeed = 50000f;
-        }
-        else {
-        	movementSpeed = 2000f;
-        }
+
+        movementSpeed = 2000f;
+   
         Vector3f lastSpeed = new Vector3f();
         Vector3f addedSpeed = new Vector3f(0,0,0);
         

@@ -55,8 +55,8 @@ public class Chunk {
         //= this.seed = System.currentTimeMillis();
 		this.list = GL11.glGenLists(1);
         chunkSize = world.chunkX;
-        height = world.chunkY-80;
-        waterHeight = 20;
+        height = world.chunkY-50;
+        waterHeight = 25;
 	}
 	
 	
