@@ -117,8 +117,19 @@ public class Chunk {
 		}
 		
 		
-		
+		//System.out.println(worldArray[x][y][z]);
 		worldArray[x][y][z] = type;
+	}
+	public void removeBlock(int x, int y, int z){
+
+		if (x < 0 || y < 0 || z < 0) {
+			return;
+		}
+		
+		if (x >= this.x || y >= this.y || z >= this.z) {
+			return;
+		}
+		worldArray[x][y][z] = 0;
 	}
     
 	public void setNoiseParam(int heightInput,int floorInput){
@@ -177,6 +188,9 @@ public class Chunk {
         GL11.glNewList(list, GL11.GL_COMPILE);
         GL11.glBegin(GL11.GL_QUADS);
         for (Cube c: cubes){
+        	c.draw(this);
+        }
+        for (Cube c: spawnedCubes){
         	c.draw(this);
         }
       
@@ -277,6 +291,10 @@ public class Chunk {
 		//System.out.println("MADE");
 		this.makeList();
 		
+	}
+	public void destroyCube(int index){
+		cubes.remove(index);
+		this.makeList();
 	}
     
 	

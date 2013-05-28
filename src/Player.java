@@ -181,8 +181,6 @@ public class Player {
 		  int tempZ = (int)lookAt.z;
 		  
 		  tempX = (Math.round(tempX/200))*200;
-		  System.out.println(lookAt.x);
-		  System.out.println(tempX);
 		  tempY = (Math.round(tempY/200))*200;
 		  tempZ = (Math.round(tempZ/200))*200;
 		  //RigidBodySphere newSphere = new RigidBodySphere(100, new Vector3f(lookAt.x, lookAt.y, lookAt.z));
@@ -197,6 +195,8 @@ public class Player {
 		  //newCube.zz = (int)Math.round(lookAt.z/200);
 		  
 		  Chunk currentChunk = world.chunkArray[world.xPosCenter][world.yPosCenter];
+	//	  System.out.println(tempX);
+		//  currentChunk.setBlock(tempX, tempY, tempZ, CubeType.DIRT);
 		  currentChunk.spawnCube(newCube);
 		 // currentChunk.genSeed();
 		  //currentChunk.make();
@@ -205,6 +205,32 @@ public class Player {
 		  //dir.scale(30*newSphere.m);
 		  //newSphere.P = dir;
 		  //spheres.add(newSphere);
+	  }
+	  if(recharge == 0 && Keyboard.isKeyDown(Keyboard.KEY_X)){
+		  recharge = 10;
+		  int tempX = (int)lookAt.x;
+		  int tempY = (int)lookAt.y + 150;
+		  int tempZ = (int)lookAt.z;
+		  
+		  tempX = (Math.round(tempX/200))*200;
+		  tempY = (Math.round(tempY/200))*200;
+		  tempZ = (Math.round(tempZ/200))*200;
+		  
+		  Chunk currentChunk = world.chunkArray[world.xPosCenter][world.yPosCenter];
+
+		  //int toDestroy = 0;
+		  for(Cube c: currentChunk.cubes){
+			  if(c.pos.x == tempX && c.pos.y == tempY && c.pos.z == tempZ){
+				  System.out.println("BLOCK FOUND");
+				  System.out.println(currentChunk.cubes.indexOf(c));
+				  currentChunk.destroyCube(currentChunk.cubes.indexOf(c));
+				  currentChunk.removeBlock(tempX, tempY, tempZ);
+				  break;
+			  }
+
+		  }
+		  
+
 	  }
 	  for (RigidBodySphere s: spheres){
 		  s.drawSphere();
