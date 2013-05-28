@@ -177,7 +177,7 @@ public class Player {
 	  if(recharge == 0 && Keyboard.isKeyDown(Keyboard.KEY_C)){
 		  recharge = 10;
 		  int tempX = (int)lookAt.x;
-		  int tempY = (int)lookAt.y + 150;
+		  int tempY = (int)lookAt.y + 200;
 		  int tempZ = (int)lookAt.z;
 		  
 		  tempX = (Math.round(tempX/200))*200;
@@ -196,7 +196,7 @@ public class Player {
 		  Chunk currentChunk = world.chunkArray[world.xPosCenter][world.yPosCenter];
 	//	  System.out.println(tempX);
 		//  currentChunk.setBlock(tempX, tempY, tempZ, CubeType.DIRT);
-		  System.out.println("BLOCK SPAWNED");
+		 
 		  Cube newCube = new Cube(tempX, tempY, tempZ,200,CubeType.DIRT);
 		  newCube.xx = tempX/200;
 		  newCube.yy = tempY/200;
@@ -207,7 +207,7 @@ public class Player {
 	  if(recharge == 0 && Keyboard.isKeyDown(Keyboard.KEY_X)){
 		  recharge = 10;
 		  int tempX = (int)lookAt.x;
-		  int tempY = (int)lookAt.y + 150;
+		  int tempY = (int)lookAt.y + 200;
 		  int tempZ = (int)lookAt.z;
 		  
 		  tempX = (Math.round(tempX/200))*200;
@@ -218,9 +218,7 @@ public class Player {
 
 		  for(Cube c: currentChunk.cubes){
 			  if(c.pos.x == tempX && c.pos.y == tempY && c.pos.z == tempZ){
-				  System.out.println(c.pos.x);
-				  System.out.println(tempX);
-				  System.out.println("BLOCK FOUND");
+				  System.out.println("BLOCK DELETED");
 				  System.out.println(currentChunk.cubes.indexOf(c));
 				  currentChunk.destroyCube(currentChunk.cubes.indexOf(c));
 				  //currentChunk.removeBlock(tempX, tempY, tempZ);

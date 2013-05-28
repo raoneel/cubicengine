@@ -286,7 +286,7 @@ public class Chunk {
 		boolean cubeFound = false;
 		for (Cube c: cubes){
 			  if(c.pos.x == newCube.pos.x && c.pos.y == newCube.pos.y && c.pos.z == newCube.pos.z){
-				  System.out.println("CUBE FOUND");
+				  System.out.println("CUBE ALREADY THERE");
 				  cubeFound = true;
 				  break;
 			  }
@@ -297,6 +297,7 @@ public class Chunk {
 			//make();
 			//System.out.println("MADE");
 			this.makeList();
+			 System.out.println("BLOCK SPAWNED");
 		}
 		
 		
