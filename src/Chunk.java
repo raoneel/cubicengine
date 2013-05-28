@@ -8,6 +8,7 @@ public class Chunk {
 	
 	int[][][] worldArray;
 	ArrayList<Cube> cubes;
+	ArrayList<Cube> spawnedCubes;
 	int x;
 	int y;
 	int z;
@@ -42,6 +43,7 @@ public class Chunk {
 		this.world = world;
 		worldArray = new int[x][y][z];
 		cubes = new ArrayList<Cube>();
+		spawnedCubes = new ArrayList<Cube>();
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -157,8 +159,7 @@ public class Chunk {
 		    			Cube c = new Cube(i * 200 + (200 * this.x) * chunkX, j * 200, k * 200 + (200 * this.z) * chunkZ, 200,this.getBlock(i, j, k) );
 		    			c.xx = i;
 		    			c.yy = j;
-		    			c.zz = k;
-		    			
+		    			c.zz = k;	    			
 		    			this.cubes.add(c);
 	    			}
                     
@@ -178,6 +179,8 @@ public class Chunk {
         for (Cube c: cubes){
         	c.draw(this);
         }
+      
+        
         GL11.glEnd();
         GL11.glEndList();
         //  isMade = true;
@@ -266,6 +269,14 @@ public class Chunk {
 	
 	public void genPlayerPosition(Player player){
 		player.translate((200 * this.x) * chunkX,(200 * this.y),(200 * this.z) * chunkZ);
+	}
+	public void spawnCube(Cube newCube){
+		cubes.add(newCube);
+		//genSeed();
+		//make();
+		//System.out.println("MADE");
+		this.makeList();
+		
 	}
     
 	

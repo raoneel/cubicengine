@@ -149,10 +149,12 @@ public class Player {
     	for (int i = 0; i < 3; i++) {
     		for (int j = 0; j < 3; j++) {
     			cubes.add(world.chunkArray[world.xPosCenter + i - 1][world.yPosCenter + j - 1].cubes);
+    			//System.out.println(world.xPosCenter + i -1);
     		}
     	}
     	
     	Chunk aChunk = world.chunkArray[world.xPosCenter][world.yPosCenter];
+    
     	
     	if(Keyboard.isKeyDown(Keyboard.KEY_G)){
     		spheres.clear();
@@ -171,6 +173,38 @@ public class Player {
 		  dir.scale(30*newSphere.m);
 		  newSphere.P = dir;
 		  spheres.add(newSphere);
+	  }
+	  if(recharge == 0 && Keyboard.isKeyDown(Keyboard.KEY_C)){
+		  recharge = 10;
+		  int tempX = (int)lookAt.x;
+		  int tempY = (int)lookAt.y + 150;
+		  int tempZ = (int)lookAt.z;
+		  
+		  tempX = (Math.round(tempX/200))*200;
+		  System.out.println(lookAt.x);
+		  System.out.println(tempX);
+		  tempY = (Math.round(tempY/200))*200;
+		  tempZ = (Math.round(tempZ/200))*200;
+		  //RigidBodySphere newSphere = new RigidBodySphere(100, new Vector3f(lookAt.x, lookAt.y, lookAt.z));
+		  //Cube newCube = new Cube(lookAt.x, lookAt.y, lookAt.z,200,CubeType.DIRT);
+		  Cube newCube = new Cube(tempX, tempY, tempZ,200,CubeType.DIRT);
+		  newCube.xx = tempX/200;
+		  newCube.yy = tempY/200;
+		  newCube.zz = tempZ/200;
+		  //newCube.xx = (int)Math.round(lookAt.x/200);
+		  //System.out.println(newCube.xx);
+		  //newCube.yy = (int)Math.round(lookAt.y/200);
+		  //newCube.zz = (int)Math.round(lookAt.z/200);
+		  
+		  Chunk currentChunk = world.chunkArray[world.xPosCenter][world.yPosCenter];
+		  currentChunk.spawnCube(newCube);
+		 // currentChunk.genSeed();
+		  //currentChunk.make();
+		  //currentChunk.makeList();
+		  //world.chunkArray[world.xPosCenter][world.yPosCenter] = currentChunk;
+		  //dir.scale(30*newSphere.m);
+		  //newSphere.P = dir;
+		  //spheres.add(newSphere);
 	  }
 	  for (RigidBodySphere s: spheres){
 		  s.drawSphere();
