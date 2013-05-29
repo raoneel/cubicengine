@@ -248,7 +248,7 @@ public class Chunk {
 		if (z - 1 < 0 || z+1 > this.z -1) {
 			edge = true;
 		}
-        
+        /*
 		//Block is obscured
 		if (!edge && getBlock(x+1, y, z) == 1 &&
             getBlock(x-1, y, z) == 1 &&
@@ -261,7 +261,7 @@ public class Chunk {
 			return worldArray[x][y][z];
 			//return 0;
 		}
-		
+		*/
 		
 		return worldArray[x][y][z];
         
@@ -306,7 +306,9 @@ public class Chunk {
 		
 	}
 	public void destroyCube(int index){
+		//this.make();
 		cubes.remove(index);
+		
 		this.makeList();
 	}
     

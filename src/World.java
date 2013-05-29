@@ -19,7 +19,7 @@ public class World {
 	int xPosCenter;
 	int yPosCenter;
 	int stepSize = 3;
-	int displaySize = 15;
+	int displaySize = 9;
 	public long seed;
 	
 	public World(Player player) {
