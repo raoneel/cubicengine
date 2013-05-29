@@ -170,10 +170,10 @@ public class Chunk {
 		    			Cube c = new Cube(i * 200 + (200 * this.x) * chunkX, j * 200, k * 200 + (200 * this.z) * chunkZ, 200,this.getBlock(i, j, k) );
 		    			c.xx = i;
 		    			c.yy = j;
-		    			c.zz = k;	    			
+		    			c.zz = k;	    		
+		    	
 		    			this.cubes.add(c);
 	    			}
-                    
                     
 	    		}
 	    	}
@@ -256,7 +256,10 @@ public class Chunk {
             getBlock(x, y-1, z) == 1 &&
             getBlock(x, y, z+1) == 1 &&
             getBlock(x, y, z-1) == 1) {
-			return 0;
+			
+			//HERE
+			return worldArray[x][y][z];
+			//return 0;
 		}
 		
 		

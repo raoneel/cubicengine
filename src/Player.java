@@ -30,7 +30,7 @@ public class Player {
     
     float mouseSensitivity = 2.0f;
     float movementSpeed = 5000.0f; //move 10 units per second
-    float gravity = 40;
+    float gravity = 90;
     float jumpDistance = 2000;
     
     private float vx;
@@ -183,6 +183,13 @@ public class Player {
 		  tempX = (Math.round(tempX/200))*200;
 		  tempY = (Math.round(tempY/200))*200;
 		  tempZ = (Math.round(tempZ/200))*200;
+		  
+		  int chunkXPos = (tempX/200)%16;
+		  int chunkYPos = (tempY/200)%128;
+		  int chunkZPos = (tempZ/200)%16;
+		  System.out.println(chunkXPos);
+		  System.out.println(chunkYPos);
+		  System.out.println(chunkZPos);
 		  //RigidBodySphere newSphere = new RigidBodySphere(100, new Vector3f(lookAt.x, lookAt.y, lookAt.z));
 		  //Cube newCube = new Cube(lookAt.x, lookAt.y, lookAt.z,200,CubeType.DIRT);
 		  
@@ -194,14 +201,17 @@ public class Player {
 		  //newCube.zz = (int)Math.round(lookAt.z/200);
 		  
 		  Chunk currentChunk = world.chunkArray[world.xPosCenter][world.yPosCenter];
+		  currentChunk.setBlock(chunkXPos, chunkYPos, chunkZPos, CubeType.DIRT);
 	//	  System.out.println(tempX);
-		//  currentChunk.setBlock(tempX, tempY, tempZ, CubeType.DIRT);
+		  
 		 
 		  Cube newCube = new Cube(tempX, tempY, tempZ,200,CubeType.DIRT);
 		  newCube.xx = tempX/200;
 		  newCube.yy = tempY/200;
 		  newCube.zz = tempZ/200;
+
 		  currentChunk.spawnCube(newCube);
+		 
 
 	  }
 	  if(recharge == 0 && Keyboard.isKeyDown(Keyboard.KEY_X)){
@@ -213,15 +223,31 @@ public class Player {
 		  tempX = (Math.round(tempX/200))*200;
 		  tempY = (Math.round(tempY/200))*200;
 		  tempZ = (Math.round(tempZ/200))*200;
-		  
+		  int chunkXPos = (tempX/200)%16;
+		  int chunkYPos = (tempY/200)%128;
+		  int chunkZPos = (tempZ/200)%16;
 		  Chunk currentChunk = world.chunkArray[world.xPosCenter][world.yPosCenter];
 
 		  for(Cube c: currentChunk.cubes){
 			  if(c.pos.x == tempX && c.pos.y == tempY && c.pos.z == tempZ){
+				  
+				 // Chunk newChunk = new Chunk(currentChunk.x, currentChunk.y, currentChunk.z, world);
+					//newChunk.chunkX = newChunkX;
+					//newChunk.chunkZ = newChunkZ;
+
+				 // newChunk.genSeed();
+				//newChunk.make();
+				  
 				  System.out.println("BLOCK DELETED");
 				  System.out.println(currentChunk.cubes.indexOf(c));
+				  currentChunk.removeBlock(chunkXPos, chunkYPos, chunkZPos);
 				  currentChunk.destroyCube(currentChunk.cubes.indexOf(c));
-				  //currentChunk.removeBlock(tempX, tempY, tempZ);
+				 
+				  
+				//currentChunk = newChunk;
+					
+				  
+				 
 				  break;
 			  }
 
