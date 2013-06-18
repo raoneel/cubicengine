@@ -240,7 +240,13 @@ public class Player {
 				  
 				  System.out.println("BLOCK DELETED");
 				  System.out.println(currentChunk.cubes.indexOf(c));
-				  currentChunk.removeBlock(chunkXPos, chunkYPos, chunkZPos);
+				  currentChunk.setBlock(chunkXPos, chunkYPos, chunkZPos, 0);
+				  System.out.println(chunkXPos);
+				  System.out.println(chunkYPos);
+				  System.out.println(chunkZPos);
+				  //currentChunk.refresh();
+				 // currentChunk.removeBlock(chunkXPos, chunkYPos, chunkZPos);
+				//  currentChunk.destroyCube(chunkXPos, chunkYPos, chunkZPos);
 				  currentChunk.destroyCube(currentChunk.cubes.indexOf(c));
 				 
 				  

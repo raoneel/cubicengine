@@ -156,6 +156,7 @@ public class Chunk {
 	public void make() {
 		this.genSeed();
 		this.genTerrain();
+		//this.cubes.clear();
 	    for (int i = 0; i < this.x; i++) {
 	    	
 	    	for (int j = 0; j < this.y; j++) {
@@ -179,7 +180,7 @@ public class Chunk {
 	    	}
             
 	    }
-        
+      
 	}
 	
 	public void makeList(){
@@ -248,7 +249,7 @@ public class Chunk {
 		if (z - 1 < 0 || z+1 > this.z -1) {
 			edge = true;
 		}
-        /*
+        
 		//Block is obscured
 		if (!edge && getBlock(x+1, y, z) == 1 &&
             getBlock(x-1, y, z) == 1 &&
@@ -256,12 +257,9 @@ public class Chunk {
             getBlock(x, y-1, z) == 1 &&
             getBlock(x, y, z+1) == 1 &&
             getBlock(x, y, z-1) == 1) {
-			
-			//HERE
-			return worldArray[x][y][z];
-			//return 0;
+			return 0;
 		}
-		*/
+		
 		
 		return worldArray[x][y][z];
         
@@ -286,6 +284,7 @@ public class Chunk {
 		player.translate((200 * this.x) * chunkX,(200 * this.y),(200 * this.z) * chunkZ);
 	}
 	public void spawnCube(Cube newCube){
+		int size = cubes.size();
 		boolean cubeFound = false;
 		for (Cube c: cubes){
 			  if(c.pos.x == newCube.pos.x && c.pos.y == newCube.pos.y && c.pos.z == newCube.pos.z){
@@ -296,22 +295,46 @@ public class Chunk {
 		}
 		if(!cubeFound){
 			cubes.add(newCube);
+			 System.out.println(cubes.indexOf(newCube));
 			//genSeed();
 			//make();
 			//System.out.println("MADE");
+			//GL11.glDeleteLists(list,1);
 			this.makeList();
 			 System.out.println("BLOCK SPAWNED");
 		}
 		
 		
 	}
+	
 	public void destroyCube(int index){
-		//this.make();
-		cubes.remove(index);
 		
+	this.cubes.clear();
+	    for (int i = 0; i < this.x; i++) {
+	    	
+	    	for (int j = 0; j < this.y; j++) {
+	    		
+	    		for (int k = 0; k < this.z;k++) {
+	    			
+	    			if (this.drawGetBlock(i, j, k) > 0 && worldArray[i][j][k] != 0 ) {
+	    				//Offset the cubes by the chunk offset		
+		    			Cube c = new Cube(i * 200 + (200 * this.x) * chunkX, j * 200, k * 200 + (200 * this.z) * chunkZ, 200,this.getBlock(i, j, k) );
+		    			c.xx = i;
+		    			c.yy = j;
+		    			c.zz = k;	    		
+		    	
+		    			this.cubes.add(c);
+	    			}
+                    
+	    		}
+	    	}
+            
+	    }
+	    
+	
 		this.makeList();
+		
 	}
-    
 	
     
 }
