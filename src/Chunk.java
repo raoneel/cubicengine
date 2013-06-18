@@ -9,6 +9,7 @@ public class Chunk {
 	int[][][] worldArray;
 	ArrayList<Cube> cubes;
 	ArrayList<Cube> spawnedCubes;
+	int[][][] cubeExists;
 	int x;
 	int y;
 	int z;
@@ -42,6 +43,7 @@ public class Chunk {
 	public Chunk(int x, int y, int z, World world) {
 		this.world = world;
 		worldArray = new int[x][y][z];
+		cubeExists = new int[x][y][z];
 		cubes = new ArrayList<Cube>();
 		spawnedCubes = new ArrayList<Cube>();
 		this.x = x;
@@ -115,10 +117,15 @@ public class Chunk {
 		if (x >= this.x || y >= this.y || z >= this.z) {
 			return;
 		}
-		
+		if (type < 1 || type > 7){
+			cubeExists[x][y][z] = 0;
+		}else{
+			cubeExists[x][y][z] = 1;
+		}
 		
 		//System.out.println(worldArray[x][y][z]);
 		worldArray[x][y][z] = type;
+
 	}
 	public void removeBlock(int x, int y, int z){
 
@@ -130,6 +137,7 @@ public class Chunk {
 			return;
 		}
 		worldArray[x][y][z] = 0;
+		cubeExists[x][y][z] = 0;
 	}
     
 	public void setNoiseParam(int heightInput,int floorInput){
@@ -257,11 +265,16 @@ public class Chunk {
             getBlock(x, y-1, z) == 1 &&
             getBlock(x, y, z+1) == 1 &&
             getBlock(x, y, z-1) == 1) {
+			cubeExists[x][y][z] = 1;
 			return 0;
 		}
-		
-		
-		return worldArray[x][y][z];
+		int type = worldArray[x][y][z];
+		if (type < 1 || type > 7){
+			cubeExists[x][y][z] = 0;
+		}else{
+			cubeExists[x][y][z] = 1;
+		}
+		return type;
         
         
 	}
@@ -277,6 +290,7 @@ public class Chunk {
 		}
 		
 		return worldArray[x][y][z];
+		
         
 	}
 	
@@ -284,7 +298,7 @@ public class Chunk {
 		player.translate((200 * this.x) * chunkX,(200 * this.y),(200 * this.z) * chunkZ);
 	}
 	public void spawnCube(Cube newCube){
-		int size = cubes.size();
+		/*
 		boolean cubeFound = false;
 		for (Cube c: cubes){
 			  if(c.pos.x == newCube.pos.x && c.pos.y == newCube.pos.y && c.pos.z == newCube.pos.z){
@@ -293,16 +307,13 @@ public class Chunk {
 				  break;
 			  }
 		}
-		if(!cubeFound){
-			cubes.add(newCube);
-			 System.out.println(cubes.indexOf(newCube));
-			//genSeed();
-			//make();
-			//System.out.println("MADE");
-			//GL11.glDeleteLists(list,1);
-			this.makeList();
-			 System.out.println("BLOCK SPAWNED");
-		}
+		*/
+		cubes.add(newCube);
+		System.out.println(cubes.indexOf(newCube));
+	
+		this.makeList();
+		System.out.println("BLOCK SPAWNED");
+		
 		
 		
 	}
@@ -316,7 +327,7 @@ public class Chunk {
 	    		
 	    		for (int k = 0; k < this.z;k++) {
 	    			
-	    			if (this.drawGetBlock(i, j, k) > 0 && worldArray[i][j][k] != 0 ) {
+	    			if (this.drawGetBlock(i, j, k) > 0 && worldArray[i][j][k] != 0 && cubeExists[i][j][k] == 1) {
 	    				//Offset the cubes by the chunk offset		
 		    			Cube c = new Cube(i * 200 + (200 * this.x) * chunkX, j * 200, k * 200 + (200 * this.z) * chunkZ, 200,this.getBlock(i, j, k) );
 		    			c.xx = i;
