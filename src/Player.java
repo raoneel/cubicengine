@@ -187,9 +187,7 @@ public class Player {
 		  int chunkXPos = (tempX/200)%16;
 		  int chunkYPos = (tempY/200)%128;
 		  int chunkZPos = (tempZ/200)%16;
-		  System.out.println(chunkXPos);
-		  System.out.println(chunkYPos);
-		  System.out.println(chunkZPos);
+		
 		  //RigidBodySphere newSphere = new RigidBodySphere(100, new Vector3f(lookAt.x, lookAt.y, lookAt.z));
 		  //Cube newCube = new Cube(lookAt.x, lookAt.y, lookAt.z,200,CubeType.DIRT);
 		  
@@ -199,8 +197,11 @@ public class Player {
 		  //System.out.println(newCube.xx);
 		  //newCube.yy = (int)Math.round(lookAt.y/200);
 		  //newCube.zz = (int)Math.round(lookAt.z/200);
-		  
 		  Chunk currentChunk = world.chunkArray[world.xPosCenter][world.yPosCenter];
+		  if(currentChunk.cubeExists[chunkXPos][chunkYPos][chunkZPos] == 1){
+			  System.out.println("CANNOT SPAWN BLOCK");
+		  }else{
+		  
 		  currentChunk.setBlock(chunkXPos, chunkYPos, chunkZPos, CubeType.DIRT);
 	//	  System.out.println(tempX);
 		  
@@ -209,9 +210,12 @@ public class Player {
 		  newCube.xx = tempX/200;
 		  newCube.yy = tempY/200;
 		  newCube.zz = tempZ/200;
-
+		  System.out.println("BLOCK SPAWNED");
+		  System.out.println(chunkXPos);
+		  System.out.println(chunkYPos);
+		  System.out.println(chunkZPos);
 		  currentChunk.spawnCube(newCube);
-		 
+		  }
 
 	  }
 	  if(recharge == 0 && Keyboard.isKeyDown(Keyboard.KEY_X)){

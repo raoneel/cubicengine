@@ -312,7 +312,7 @@ public class Chunk {
 		System.out.println(cubes.indexOf(newCube));
 	
 		this.makeList();
-		System.out.println("BLOCK SPAWNED");
+		
 		
 		
 		
@@ -321,6 +321,11 @@ public class Chunk {
 	public void destroyCube(int index){
 		
 	this.cubes.clear();
+	remake();
+	this.makeList();
+		
+	}
+	public void remake(){
 	    for (int i = 0; i < this.x; i++) {
 	    	
 	    	for (int j = 0; j < this.y; j++) {
@@ -341,10 +346,6 @@ public class Chunk {
 	    	}
             
 	    }
-	    
-	
-		this.makeList();
-		
 	}
 	
     
