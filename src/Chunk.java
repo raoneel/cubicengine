@@ -2,7 +2,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
-
+import org.newdawn.slick.openal.Audio;
+import org.newdawn.slick.openal.AudioLoader;
+import org.newdawn.slick.util.ResourceLoader;
 
 public class Chunk {
 	

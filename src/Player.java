@@ -1,10 +1,15 @@
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.openal.Audio;
+import org.newdawn.slick.openal.AudioLoader;
+import org.newdawn.slick.util.ResourceLoader;
 /**
  * This class controls the first-person camera and also the keypress actions for the player
  * @author neelrao
@@ -38,6 +43,10 @@ public class Player {
     
     public Vector3f velocity;
     public Vector3f accel;
+    private Audio[] blockGrassSE = new Audio[4];
+    private Audio[] blockDirtSE = new Audio[4];
+    private Audio[] blockWoodSE = new Audio[4];
+    private int cubeSpawnType;
     
     public Player() {
     	spheres = new ArrayList<RigidBodySphere>();
@@ -53,6 +62,27 @@ public class Player {
 		noClip = false;
 		onGround = false;
 		this.makeAABB();
+		try {
+			blockDirtSE[0] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/gravel1.ogg"));
+			blockDirtSE[1] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/gravel2.ogg"));
+			blockDirtSE[2] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/gravel3.ogg"));
+			blockDirtSE[3] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/gravel4.ogg"));
+			blockGrassSE[0] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/grass1.ogg"));
+			blockGrassSE[1] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/grass2.ogg"));
+			blockGrassSE[2] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/grass3.ogg"));
+			blockGrassSE[3] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/grass4.ogg"));
+			blockWoodSE[0] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/wood1.ogg"));
+			blockWoodSE[1] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/wood2.ogg"));
+			blockWoodSE[2] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/wood3.ogg"));
+			blockWoodSE[3] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/wood4.ogg"));
+		//	background = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/calm1.ogg"));
+			//background.playAsMusic(1.0f,1.0f,true);
+			} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		cubeSpawnType = CubeType.DIRT;
+		
     }
     
     public AABB getAABB() {
@@ -167,6 +197,24 @@ public class Player {
 	  if(recharge >0){
 		  recharge --;
 	  }
+	  
+	  if(recharge == 0 && Keyboard.isKeyDown(Keyboard.KEY_O)){
+		  
+	  }
+	  
+	  if(recharge == 0 && Keyboard.isKeyDown(Keyboard.KEY_1)){
+		  recharge = 10;
+		  cubeSpawnType = CubeType.GRASS;
+	  }
+	  if(recharge == 0 && Keyboard.isKeyDown(Keyboard.KEY_2)){
+		  recharge = 10;
+		  cubeSpawnType = CubeType.DIRT;
+	  }
+	  if(recharge == 0 && Keyboard.isKeyDown(Keyboard.KEY_3)){
+		  recharge = 10;
+		  cubeSpawnType = CubeType.WOOD;
+	  }
+	  
 	  if(recharge == 0 && Keyboard.isKeyDown(Keyboard.KEY_R)){
 		  recharge = 10;
 		  RigidBodySphere newSphere = new RigidBodySphere(100, new Vector3f(lookAt.x, lookAt.y, lookAt.z));
@@ -176,6 +224,7 @@ public class Player {
 	  }
 	  if(recharge == 0 && Keyboard.isKeyDown(Keyboard.KEY_C)){
 		  recharge = 10;
+		  
 		  int tempX = (int)lookAt.x;
 		  int tempY = (int)lookAt.y + 200;
 		  int tempZ = (int)lookAt.z;
@@ -198,23 +247,46 @@ public class Player {
 		  //newCube.yy = (int)Math.round(lookAt.y/200);
 		  //newCube.zz = (int)Math.round(lookAt.z/200);
 		  Chunk currentChunk = world.chunkArray[world.xPosCenter][world.yPosCenter];
-		  if(currentChunk.cubeExists[chunkXPos][chunkYPos][chunkZPos] == 1){
-			  System.out.println("CANNOT SPAWN BLOCK");
+		  if(chunkXPos > 0 && chunkYPos > 0 && chunkZPos >0){
+			  if(currentChunk.cubeExists[chunkXPos][chunkYPos][chunkZPos] == 1){
+				  System.out.println("CANNOT SPAWN BLOCK");
+			  }else{
+			  
+			  currentChunk.setBlock(chunkXPos, chunkYPos, chunkZPos, cubeSpawnType);
+		//	  System.out.println(tempX);
+			  
+			 
+			  Cube newCube = new Cube(tempX, tempY, tempZ,200,cubeSpawnType);
+			  newCube.xx = tempX/200;
+			  newCube.yy = tempY/200;
+			  newCube.zz = tempZ/200;
+			  System.out.println("BLOCK SPAWNED");
+			  System.out.println(chunkXPos);
+			  System.out.println(chunkYPos);
+			  System.out.println(chunkZPos);
+			  int type = newCube.type;
+			  int randomSound =  (int)Math.floor(Math.random() *4);
+			  switch(type){
+			  case 1:
+				  blockGrassSE[randomSound].playAsSoundEffect(1.0f, 0.4f, false);
+				  break;
+			  case 2:
+				  blockDirtSE[randomSound].playAsSoundEffect(1.0f, 0.4f, false);
+				  break;
+			  case 3:
+				  blockWoodSE[randomSound].playAsSoundEffect(1.0f, 0.4f, false);
+				  break;
+			  default:
+				  blockDirtSE[randomSound].playAsSoundEffect(1.0f, 0.4f, false); 
+			  }
+			 
+			  
+			  //background.playAsMusic(1.0f,1.0f,false);
+
+			  currentChunk.spawnCube(newCube);
+			  }
 		  }else{
-		  
-		  currentChunk.setBlock(chunkXPos, chunkYPos, chunkZPos, CubeType.DIRT);
-	//	  System.out.println(tempX);
-		  
-		 
-		  Cube newCube = new Cube(tempX, tempY, tempZ,200,CubeType.DIRT);
-		  newCube.xx = tempX/200;
-		  newCube.yy = tempY/200;
-		  newCube.zz = tempZ/200;
-		  System.out.println("BLOCK SPAWNED");
-		  System.out.println(chunkXPos);
-		  System.out.println(chunkYPos);
-		  System.out.println(chunkZPos);
-		  currentChunk.spawnCube(newCube);
+			  System.out.println("CANNOT SPAWN BLOCK");
 		  }
 
 	  }
@@ -251,6 +323,30 @@ public class Player {
 				  //currentChunk.refresh();
 				 // currentChunk.removeBlock(chunkXPos, chunkYPos, chunkZPos);
 				//  currentChunk.destroyCube(chunkXPos, chunkYPos, chunkZPos);
+				  int type = c.type;
+				  int randomSound =  (int)Math.floor(Math.random() *4);
+				  
+				  switch(type){
+				  case 1:
+					  blockGrassSE[randomSound].playAsSoundEffect(1.0f, 0.4f, false);
+					  break;
+				  case 2:
+					  blockDirtSE[randomSound].playAsSoundEffect(1.0f, 0.4f, false);
+					  break;
+				  case 3:
+					  blockWoodSE[randomSound].playAsSoundEffect(1.0f, 0.4f, false);
+					  break;
+				  default:
+					  blockDirtSE[randomSound].playAsSoundEffect(1.0f, 0.4f, false); 
+				  }
+				  /*
+				  if (type == 1){
+					  blockGrassSE[randomSound].playAsSoundEffect(1.0f, 0.4f, false);
+				  }
+				  if (type == 2){
+					  blockDirtSE[randomSound].playAsSoundEffect(1.0f, 0.4f, false);
+				  }
+				  */
 				  currentChunk.destroyCube(currentChunk.cubes.indexOf(c));
 				 
 				  

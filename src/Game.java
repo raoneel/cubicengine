@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -8,11 +9,15 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.openal.Audio;
+import org.newdawn.slick.openal.AudioLoader;
+import org.newdawn.slick.util.ResourceLoader;
 
 public class Game {
     
@@ -43,7 +48,7 @@ public class Game {
     int randomNums[][] = new int[size][size];
     long seed = 122L;
     private int displayList;
-    
+    private Audio backgroundMusic;
     Random gen = new Random(seed);
 	
     public void start() {
@@ -54,8 +59,10 @@ public class Game {
             
 		} catch (LWJGLException e) {
 		    e.printStackTrace();
+		    AL.destroy();
 		    System.exit(0);
 		}
+	    
 		
 		player = new Player();
 		player.translate(1000, 6000, 1000);
@@ -84,11 +91,12 @@ public class Game {
 			update(delta);
             
 		    updateFPS(); // update FPS Counter
-		    Display.update();
+ 		    Display.update();
 		    Display.sync(60); // cap fps to 60fps
 		}
-        
+        AL.destroy();
 		Display.destroy();
+		System.exit(0);
     }
     
     
@@ -139,6 +147,16 @@ public class Game {
 		GL11.glHint (GL11.GL_FOG_HINT, GL11.GL_NICEST);
 		GL11.glFogf(GL11.GL_FOG_START,12000f);
 		GL11.glFogf(GL11.GL_FOG_END,30000f);
+		
+		try {
+			backgroundMusic = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/calm1.ogg"));
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		backgroundMusic.playAsMusic(1.0f, 1.0f, true);
+		
     }
     
 	/**
