@@ -32,7 +32,7 @@ public class Forest {
 					continue;
 				}
 	    		for (int y = start; y < randHeight; y++) {
-	    			chunk.setBlock(x, y, z, CubeType.DIRT);
+	    			chunk.setBlock(x, y, z, CubeType.WOOD);
 	    			
 	    			if (y == randHeight - 1) {
 	    				chunk.setBlock(x,y,z,CubeType.LEAVES);

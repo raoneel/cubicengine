@@ -35,7 +35,7 @@ public class Player {
     
     float mouseSensitivity = 2.0f;
     float movementSpeed = 5000.0f; //move 10 units per second
-    float gravity = 90;
+    float gravity = 120;
     float jumpDistance = 2000;
     
     private float vx;
@@ -47,6 +47,7 @@ public class Player {
     private Audio[] blockDirtSE = new Audio[4];
     private Audio[] blockWoodSE = new Audio[4];
     private int cubeSpawnType;
+    private int toRecharge = 11;
     
     public Player() {
     	spheres = new ArrayList<RigidBodySphere>();
@@ -62,24 +63,16 @@ public class Player {
 		noClip = false;
 		onGround = false;
 		this.makeAABB();
-		try {
-			blockDirtSE[0] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/gravel1.ogg"));
-			blockDirtSE[1] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/gravel2.ogg"));
-			blockDirtSE[2] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/gravel3.ogg"));
-			blockDirtSE[3] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/gravel4.ogg"));
-			blockGrassSE[0] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/grass1.ogg"));
-			blockGrassSE[1] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/grass2.ogg"));
-			blockGrassSE[2] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/grass3.ogg"));
-			blockGrassSE[3] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/grass4.ogg"));
-			blockWoodSE[0] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/wood1.ogg"));
-			blockWoodSE[1] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/wood2.ogg"));
-			blockWoodSE[2] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/wood3.ogg"));
-			blockWoodSE[3] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/wood4.ogg"));
-		//	background = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/calm1.ogg"));
-			//background.playAsMusic(1.0f,1.0f,true);
+		
+		for (int i = 1; i < 5; i++){
+			try {
+				blockDirtSE[i-1] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/gravel"+ i +".ogg"));
+				blockGrassSE[i-1] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/grass"+ i +".ogg"));
+				blockWoodSE[i-1] = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("sounds/wood"+ i +".ogg"));
 			} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		cubeSpawnType = CubeType.DIRT;
 		
@@ -223,15 +216,15 @@ public class Player {
 		  spheres.add(newSphere);
 	  }
 	  if(recharge == 0 && Keyboard.isKeyDown(Keyboard.KEY_C)){
-		  recharge = 10;
+		  recharge = toRecharge;
 		  
 		  int tempX = (int)lookAt.x;
 		  int tempY = (int)lookAt.y + 200;
 		  int tempZ = (int)lookAt.z;
 		  
-		  tempX = (Math.round(tempX/200))*200;
-		  tempY = (Math.round(tempY/200))*200;
-		  tempZ = (Math.round(tempZ/200))*200;
+		  tempX = (int)(Math.floor(tempX/200))*200;
+		  tempY = (int)(Math.floor(tempY/200))*200;
+		  tempZ = (int)(Math.floor(tempZ/200))*200;
 		  
 		  int chunkXPos = (tempX/200)%16;
 		  int chunkYPos = (tempY/200)%128;
@@ -247,25 +240,79 @@ public class Player {
 		  //newCube.yy = (int)Math.round(lookAt.y/200);
 		  //newCube.zz = (int)Math.round(lookAt.z/200);
 		  Chunk currentChunk = world.chunkArray[world.xPosCenter][world.yPosCenter];
-		  if(chunkXPos > 0 && chunkYPos > 0 && chunkZPos >0){
+		  if(chunkXPos > -1 && chunkYPos > -1 && chunkZPos >-1 && 
+				  chunkXPos <16 && chunkYPos < 127 && chunkZPos < 16){
 			  if(currentChunk.cubeExists[chunkXPos][chunkYPos][chunkZPos] == 1){
 				  System.out.println("CANNOT SPAWN BLOCK");
+	
+			  }else if(currentChunk.checkSurrounding(chunkXPos, chunkYPos, chunkZPos)){
+				  System.out.println("No Block Touching");
+			
 			  }else{
-			  
-			  currentChunk.setBlock(chunkXPos, chunkYPos, chunkZPos, cubeSpawnType);
-		//	  System.out.println(tempX);
-			  
-			 
-			  Cube newCube = new Cube(tempX, tempY, tempZ,200,cubeSpawnType);
-			  newCube.xx = tempX/200;
-			  newCube.yy = tempY/200;
-			  newCube.zz = tempZ/200;
-			  System.out.println("BLOCK SPAWNED");
+				  Cube newCube = new Cube(tempX, tempY, tempZ,200,cubeSpawnType,currentChunk);
+				  newCube.canSpawn(currentChunk);
+				  //if(newCube.canSpawn(currentChunk)){
+					  currentChunk.setBlock(chunkXPos, chunkYPos, chunkZPos, cubeSpawnType);
+				//	  System.out.println(tempX);
+					  
+					 
+					  //Cube newCube = new Cube(tempX, tempY, tempZ,200,cubeSpawnType);
+					  newCube.xx = tempX/200;
+					  newCube.yy = tempY/200;
+					  newCube.zz = tempZ/200;
+					  System.out.println("BLOCK SPAWNED");
+					  System.out.println(chunkXPos);
+					  System.out.println(chunkYPos);
+					  System.out.println(chunkZPos);
+					  int type = newCube.type;
+					  int randomSound =  (int)Math.floor(Math.random() *4);
+					  switch(type){
+					  case 1:
+						  blockGrassSE[randomSound].playAsSoundEffect(1.0f, 0.4f, false);
+						  break;
+					  case 2:
+						  blockDirtSE[randomSound].playAsSoundEffect(1.0f, 0.4f, false);
+						  break;
+					  case 3:
+						  blockWoodSE[randomSound].playAsSoundEffect(1.0f, 0.4f, false);
+						  break;
+					  default:
+						  blockDirtSE[randomSound].playAsSoundEffect(1.0f, 0.4f, false); 
+					  }
+					 
+					  
+					  //background.playAsMusic(1.0f,1.0f,false);
+		
+					  currentChunk.spawnCube(newCube);
+			  }
+		  }else{
+			  System.out.println("CANNOT SPAWN BLOCK2");
+		  }
+
+	  }
+	  if(recharge == 0 && Keyboard.isKeyDown(Keyboard.KEY_X)){
+		  recharge = toRecharge;
+		  int tempX = (int)lookAt.x;
+		  int tempY = (int)lookAt.y + 200;
+		  int tempZ = (int)lookAt.z;
+		  
+		  tempX = (int)(Math.floor(tempX/200))*200;
+		  tempY = (int)(Math.floor(tempY/200))*200;
+		  tempZ = (int)(Math.floor(tempZ/200))*200;
+		  int chunkXPos = (tempX/200)%16;
+		  int chunkYPos = (tempY/200)%128;
+		  int chunkZPos = (tempZ/200)%16;
+		  Chunk currentChunk = world.chunkArray[world.xPosCenter][world.yPosCenter];
+		  if(currentChunk.cubeExists[chunkXPos][chunkYPos][chunkZPos] == 1){
+			  System.out.println("BLOCK DELETED");
+			  currentChunk.setBlock(chunkXPos, chunkYPos, chunkZPos, 0);
 			  System.out.println(chunkXPos);
 			  System.out.println(chunkYPos);
 			  System.out.println(chunkZPos);
-			  int type = newCube.type;
+			  
+			  int type = currentChunk.worldArray[chunkXPos][chunkYPos][chunkZPos];
 			  int randomSound =  (int)Math.floor(Math.random() *4);
+			  
 			  switch(type){
 			  case 1:
 				  blockGrassSE[randomSound].playAsSoundEffect(1.0f, 0.4f, false);
@@ -279,34 +326,17 @@ public class Player {
 			  default:
 				  blockDirtSE[randomSound].playAsSoundEffect(1.0f, 0.4f, false); 
 			  }
-			 
-			  
-			  //background.playAsMusic(1.0f,1.0f,false);
-
-			  currentChunk.spawnCube(newCube);
-			  }
+			  currentChunk.worldArray[chunkXPos][chunkYPos][chunkZPos] = 0;
+			  currentChunk.cubeExists[chunkXPos][chunkYPos][chunkZPos] = 0;
+			  currentChunk.destroyCube();
 		  }else{
-			  System.out.println("CANNOT SPAWN BLOCK");
+			  System.out.println("CANNOT DELETE BLOCK");
+			
 		  }
-
-	  }
-	  if(recharge == 0 && Keyboard.isKeyDown(Keyboard.KEY_X)){
-		  recharge = 10;
-		  int tempX = (int)lookAt.x;
-		  int tempY = (int)lookAt.y + 200;
-		  int tempZ = (int)lookAt.z;
-		  
-		  tempX = (Math.round(tempX/200))*200;
-		  tempY = (Math.round(tempY/200))*200;
-		  tempZ = (Math.round(tempZ/200))*200;
-		  int chunkXPos = (tempX/200)%16;
-		  int chunkYPos = (tempY/200)%128;
-		  int chunkZPos = (tempZ/200)%16;
-		  Chunk currentChunk = world.chunkArray[world.xPosCenter][world.yPosCenter];
-
+/*
 		  for(Cube c: currentChunk.cubes){
-			  if(c.pos.x == tempX && c.pos.y == tempY && c.pos.z == tempZ){
-				  
+			  if(currentChunk.cubeExists[chunkXPos][chunkYPos][chunkZPos] == 1){
+				 
 				 // Chunk newChunk = new Chunk(currentChunk.x, currentChunk.y, currentChunk.z, world);
 					//newChunk.chunkX = newChunkX;
 					//newChunk.chunkZ = newChunkZ;
@@ -339,14 +369,7 @@ public class Player {
 				  default:
 					  blockDirtSE[randomSound].playAsSoundEffect(1.0f, 0.4f, false); 
 				  }
-				  /*
-				  if (type == 1){
-					  blockGrassSE[randomSound].playAsSoundEffect(1.0f, 0.4f, false);
-				  }
-				  if (type == 2){
-					  blockDirtSE[randomSound].playAsSoundEffect(1.0f, 0.4f, false);
-				  }
-				  */
+		
 				  currentChunk.destroyCube(currentChunk.cubes.indexOf(c));
 				 
 				  
@@ -355,10 +378,12 @@ public class Player {
 				  
 				 
 				  break;
+			  }else{
+				  System.out.println("NOTHING");
 			  }
 
 		  }
-		  
+		  */
 
 	  }
 	  for (RigidBodySphere s: spheres){
@@ -608,8 +633,6 @@ public class Player {
         
         GL11.glLoadIdentity();
     	GLU.gluLookAt(camera.x, camera.y, camera.z, lookAt.x, lookAt.y, lookAt.z, up.x, up.y, up.z);
-    	
-
     	
     }
 }

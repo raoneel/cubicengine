@@ -113,6 +113,7 @@ public class Chunk {
         //		}
 		
 		if (x < 0 || y < 0 || z < 0) {
+			
 			return;
 		}
 		
@@ -121,12 +122,14 @@ public class Chunk {
 		}
 		if (type < 1 || type > 7){
 			cubeExists[x][y][z] = 0;
+			worldArray[x][y][z] = 0;
 		}else{
 			cubeExists[x][y][z] = 1;
+			worldArray[x][y][z] = type;
 		}
 		
 		//System.out.println(worldArray[x][y][z]);
-		worldArray[x][y][z] = type;
+		
 
 	}
 	public void removeBlock(int x, int y, int z){
@@ -178,7 +181,7 @@ public class Chunk {
 	    				
 	    				
 	    				
-		    			Cube c = new Cube(i * 200 + (200 * this.x) * chunkX, j * 200, k * 200 + (200 * this.z) * chunkZ, 200,this.getBlock(i, j, k) );
+		    			Cube c = new Cube(i * 200 + (200 * this.x) * chunkX, j * 200, k * 200 + (200 * this.z) * chunkZ, 200,this.getBlock(i, j, k),this);
 		    			c.xx = i;
 		    			c.yy = j;
 		    			c.zz = k;	    		
@@ -222,6 +225,22 @@ public class Chunk {
 		return world.getBlock(this, x, y, z);
 	}
     
+	public Boolean checkSurrounding(int x, int y, int z){
+		if(x+1 <16 && cubeExists[x+1][y][z] == 1 ){
+			return false;
+		}else if(x-1 >= 0 && cubeExists[x-1][y][z] == 1){
+			return false;
+		}else if(cubeExists[x][y+1][z] == 1){
+			return false;
+		}else if(cubeExists[x][y-1][z] == 1){
+			return false;
+		}else if(z+1 <16 && cubeExists[x][y][z+1] == 1){
+			return false;
+		}else if(z-1 >=0 && cubeExists[x][y][z-1] == 1){
+			return false;
+		}
+		return true;
+	}
 	
 	/**
 	 * Just like getBlock but returns 0 for blocks that are completely obscured
@@ -320,7 +339,7 @@ public class Chunk {
 		
 	}
 	
-	public void destroyCube(int index){
+	public void destroyCube(){
 		
 	this.cubes.clear();
 	remake();
@@ -336,7 +355,7 @@ public class Chunk {
 	    			
 	    			if (this.drawGetBlock(i, j, k) > 0 && worldArray[i][j][k] != 0 && cubeExists[i][j][k] == 1) {
 	    				//Offset the cubes by the chunk offset		
-		    			Cube c = new Cube(i * 200 + (200 * this.x) * chunkX, j * 200, k * 200 + (200 * this.z) * chunkZ, 200,this.getBlock(i, j, k) );
+		    			Cube c = new Cube(i * 200 + (200 * this.x) * chunkX, j * 200, k * 200 + (200 * this.z) * chunkZ, 200,this.getBlock(i, j, k),this);
 		    			c.xx = i;
 		    			c.yy = j;
 		    			c.zz = k;	    		

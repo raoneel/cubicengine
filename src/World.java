@@ -298,6 +298,11 @@ public class World {
 		makeList();
 		
 	}
+	public void updateSkyBox(Player player, int list){
+		//GL11.glPushMatrix();
+		//GL11.glLoadIdentity();
+		//GL11.gluLookAt()
+	}
     
     
 }

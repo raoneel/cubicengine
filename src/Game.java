@@ -104,6 +104,7 @@ public class Game {
         
     	world.update(player, displayList);
     	player.update(delta, world);
+    	world.updateSkyBox(player,displayList);
     	world.draw();
         
     }
@@ -125,6 +126,14 @@ public class Game {
 	    GL11.glLight(GL11.GL_LIGHT1, GL11.GL_AMBIENT, (FloatBuffer)temp.asFloatBuffer().put(lightAmbient).flip());              // Setup The Ambient Light
 	    GL11.glLight(GL11.GL_LIGHT1, GL11.GL_DIFFUSE, (FloatBuffer)temp.asFloatBuffer().put(lightDiffuse).flip());              // Setup The Diffuse Light
 	    GL11.glLight(GL11.GL_LIGHT1, GL11.GL_POSITION,(FloatBuffer)temp.asFloatBuffer().put(lightPosition).flip());         // Position The Light
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
 	    
 	    
 	   // GL11.glLightf(GL11.GL_LIGHT1, GL11.GL_LINEAR_ATTENUATION, 0.3f);
@@ -155,7 +164,7 @@ public class Game {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		backgroundMusic.playAsMusic(1.0f, 1.0f, true);
+		backgroundMusic.playAsMusic(1.0f, 0.8f, true);
 		
     }
     

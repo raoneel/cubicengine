@@ -16,8 +16,9 @@ public class Cube {
 	int xx, yy, zz;
 	public Random random;
 	public int type = 0;
+	Chunk chunk;
 	
-	public Cube(float x, float y, float z, float width, int type) {
+	public Cube(float x, float y, float z, float width, int type, Chunk chunk) {
 		this.pos = new Vector3f();
 		this.color = new Vector3f();
 		pos.x = x;
@@ -26,7 +27,7 @@ public class Cube {
 		this.width = width;
 		this.type = type;
 		random = new Random();
-		
+		this.chunk = chunk;
 		//34-139-34 grass
 		//139-69-19 dirt
 		// Give the cube a random color for now
@@ -169,6 +170,42 @@ public class Cube {
 		
 		this.drawCube(pos.x, pos.y, pos.z, width, world, xx, yy, zz);
 
+	}
+	
+	public Boolean canSpawn(Chunk chunk){
+		System.out.println(xx);
+		System.out.println(yy);
+		System.out.println(zz);
+		/*if (chunk.cubeExists[xx][yy][zz - 1] == 0 &&
+				chunk.cubeExists[xx][yy][zz + 1] == 0 &&
+				chunk.cubeExists[xx][yy - 1][zz] == 0 &&
+				chunk.cubeExists[xx][yy + 1][zz] == 0 &&
+				chunk.cubeExists[xx - 1][yy][zz] == 0 &&
+				chunk.cubeExists[xx + 1][yy][zz] == 0 
+				){
+			return false;
+			
+		}*/
+		
+		return true;
+		
+		/*
+		int test = chunk.getWorldBlock(xx,yy,zz -1);
+		if (chunk.getWorldBlock(xx, yy, zz - 1) > 1 && chunk.getWorldBlock(xx, yy, zz - 1) < 8) {
+			return true;
+		}else if (chunk.getWorldBlock(xx, yy, zz + 1) > 1 && chunk.getWorldBlock(xx, yy, zz - 1) < 8) {
+			return true;
+		}else if (chunk.getWorldBlock(xx, yy - 1, zz) > 1 && chunk.getWorldBlock(xx, yy, zz - 1) < 8) {
+			return true;
+		}else if (chunk.getWorldBlock(xx, yy + 1, zz) > 1 && chunk.getWorldBlock(xx, yy, zz - 1) < 8) {
+			return true;
+		}else if (chunk.getWorldBlock(xx - 1, yy, zz) > 1 && chunk.getWorldBlock(xx, yy, zz - 1) < 8) {
+			return true;
+		}else if (chunk.getWorldBlock(xx + 1, yy, zz) > 1 && chunk.getWorldBlock(xx, yy, zz - 1) < 8) {
+			return true;
+		}
+		return false;
+		*/
 	}
 
 
