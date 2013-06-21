@@ -305,14 +305,14 @@ public class Player {
 		  Chunk currentChunk = world.chunkArray[world.xPosCenter][world.yPosCenter];
 		  if(currentChunk.cubeExists[chunkXPos][chunkYPos][chunkZPos] == 1){
 			  System.out.println("BLOCK DELETED");
-			  currentChunk.setBlock(chunkXPos, chunkYPos, chunkZPos, 0);
+			  
+			
 			  System.out.println(chunkXPos);
 			  System.out.println(chunkYPos);
 			  System.out.println(chunkZPos);
 			  
 			  int type = currentChunk.worldArray[chunkXPos][chunkYPos][chunkZPos];
 			  int randomSound =  (int)Math.floor(Math.random() *4);
-			  
 			  switch(type){
 			  case 1:
 				  blockGrassSE[randomSound].playAsSoundEffect(1.0f, 0.4f, false);
@@ -328,6 +328,7 @@ public class Player {
 			  }
 			  currentChunk.worldArray[chunkXPos][chunkYPos][chunkZPos] = 0;
 			  currentChunk.cubeExists[chunkXPos][chunkYPos][chunkZPos] = 0;
+			  currentChunk.setBlock(chunkXPos, chunkYPos, chunkZPos, 0);
 			  currentChunk.destroyCube();
 		  }else{
 			  System.out.println("CANNOT DELETE BLOCK");
