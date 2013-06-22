@@ -28,6 +28,7 @@ public class Cube {
 		this.type = type;
 		random = new Random();
 		this.chunk = chunk;
+		
 		//34-139-34 grass
 		//139-69-19 dirt
 		// Give the cube a random color for now
